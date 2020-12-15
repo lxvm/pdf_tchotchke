@@ -1,0 +1,496 @@
+Contents
+
+1
+
+2
+
+Preface
+Introduction
+1.1 The big picture: why is the Universe not boring?
+1.2 Convection: a ﬁrst example of a nonequilibrium system
+1.3 Examples of nonequilibrium patterns and dynamics
+1.3.1 Natural patterns
+1.3.2 Prepared patterns
+1.3.3 What are the interesting questions?
+1.4 New features of pattern-forming systems
+1.4.1 Conceptual differences
+1.4.2 New properties
+1.5 A strategy for studying pattern-forming nonequilibrium
+systems
+1.6 Nonequilibrium systems not discussed in this book
+1.7 Conclusion
+1.8 Further reading
+Linear instability: basics
+2.1 Conceptual framework for a linear stability analysis
+2.2 Linear stability analysis of a pattern-forming system
+2.2.1 One-dimensional Swift–Hohenberg equation
+2.2.2 Linear stability analysis
+2.2.3 Growth rates and instability diagram
+2.3 Key steps of a linear stability analysis
+2.4 Experimental investigations of linear stability
+2.4.1 General remarks
+2.4.2 Taylor–Couette instability
+
+page xiii
+1
+2
+3
+10
+10
+20
+35
+38
+38
+43
+44
+48
+49
+50
+56
+57
+63
+63
+64
+67
+69
+70
+70
+74
+
+vii
+
+Downloaded from https://www.cambridge.org/core. Caltech Library, on 10 Dec 2020 at 20:53:09, subject to the Cambridge Core terms of use, available
+Cambridge
+Books Online © Cambridge University Press, 2010
+at https://www.cambridge.org/core/terms.
+https://doi.org/10.1017/CBO9780511627200
+
+viii
+
+Contents
+
+2.5
+
+3
+
+4
+
+Classiﬁcation for linear instabilities of a uniform state
+2.5.1 Type-I instability
+2.5.2 Type-II instability
+2.5.3 Type-III instability
+2.6 Role of symmetry in a linear stability analysis
+2.6.1 Rotationally invariant systems
+2.6.2 Uniaxial systems
+2.6.3 Anisotropic systems
+2.6.4 Formal discussion
+2.7 Conclusions
+2.8 Further reading
+Linear instability: applications
+3.1 Turing instability
+3.1.1 Reaction–diffusion equations
+3.1.2 Linear stability analysis
+3.1.3 Oscillatory instability
+3.2 Realistic chemical systems
+3.2.1 Experimental apparatus
+3.2.2 Evolution equations
+3.2.3 Experimental results
+3.3 Conclusions
+3.4 Further reading
+Nonlinear states
+4.1 Nonlinear saturation
+4.1.1 Complex amplitude
+4.1.2 Bifurcation theory
+4.1.3 Nonlinear stripe state of the Swift–Hohenberg equation
+4.2 Stability balloons
+4.2.1 General discussion
+4.2.2 Busse balloon for Rayleigh–Bénard convection
+4.3 Two-dimensional lattice states
+4.4 Non-ideal states
+4.4.1 Realistic patterns
+4.4.2 Topological defects
+4.4.3 Dynamics of defects
+4.5 Conclusions
+4.6 Further reading
+
+75
+77
+79
+80
+81
+82
+84
+86
+86
+88
+88
+96
+96
+97
+99
+108
+109
+109
+110
+116
+119
+120
+126
+129
+130
+134
+137
+139
+139
+147
+152
+158
+158
+160
+164
+165
+166
+
+Downloaded from https://www.cambridge.org/core. Caltech Library, on 10 Dec 2020 at 20:53:09, subject to the Cambridge Core terms of use, available
+Cambridge
+Books Online © Cambridge University Press, 2010
+at https://www.cambridge.org/core/terms.
+https://doi.org/10.1017/CBO9780511627200
+
+Contents
+
+5
+
+Models
+5.1 Swift–Hohenberg model
+5.1.1 Heuristic derivation
+5.1.2 Properties
+5.1.3 Numerical simulations
+5.1.4 Comparison with experimental systems
+5.2 Generalized Swift–Hohenberg models
+5.2.1 Non-symmetric model
+5.2.2 Nonpotential models
+5.2.3 Models with mean ﬂow
+5.2.4 Model for rotating convection
+5.2.5 Model for quasicrystalline patterns
+5.3 Order-parameter equations
+5.4 Complex Ginzburg–Landau equation
+5.5 Kuramoto–Sivashinsky equation
+5.6 Reaction–diffusion models
+5.7 Models that are discrete in space, time, or value
+5.8 Conclusions
+5.9 Further reading
+6 One-dimensional amplitude equation
+6.1 Origin and meaning of the amplitude
+6.2 Derivation of the amplitude equation
+6.2.1 Phenomenological derivation
+6.2.2 Deduction of the amplitude-equation parameters
+6.2.3 Method of multiple scales
+6.2.4 Boundary conditions for the amplitude equation
+6.3 Properties of the amplitude equation
+6.3.1 Universality and scales
+6.3.2 Potential dynamics
+6.4 Applications of the amplitude equation
+6.4.1 Lateral boundaries
+6.4.2 Eckhaus instability
+6.4.3 Phase dynamics
+6.5 Limitations of the amplitude-equation formalism
+6.6 Conclusions
+6.7 Further reading
+7 Amplitude equations for two-dimensional patterns
+7.1 Stripes in rotationally invariant systems
+7.1.1 Amplitude equation
+7.1.2 Boundary conditions
+
+ix
+
+173
+175
+176
+179
+183
+185
+187
+187
+188
+188
+190
+192
+192
+196
+197
+199
+201
+201
+202
+208
+211
+214
+214
+217
+218
+219
+221
+221
+224
+226
+226
+230
+234
+237
+238
+239
+244
+246
+246
+248
+
+Downloaded from https://www.cambridge.org/core. Caltech Library, on 10 Dec 2020 at 20:53:09, subject to the Cambridge Core terms of use, available
+Cambridge
+Books Online © Cambridge University Press, 2010
+at https://www.cambridge.org/core/terms.
+https://doi.org/10.1017/CBO9780511627200
+
+x
+
+8
+
+9
+
+Contents
+
+7.1.3 Potential
+7.1.4 Stability balloon
+7.1.5 Phase dynamics
+7.2 Stripes in anisotropic systems
+7.2.1 Amplitude equation
+7.2.2 Stability balloon
+7.2.3 Phase dynamics
+7.3 Superimposed stripes
+7.3.1 Amplitude equations
+7.3.2 Competition between stripes and lattices
+7.3.3 Hexagons in the absence of ﬁeld-inversion symmetry
+7.3.4 Spatial variations
+7.3.5 Cross-stripe instability
+7.4 Conclusions
+7.5 Further reading
+Defects and fronts
+8.1 Dislocations
+8.1.1 Stationary dislocation
+8.1.2 Dislocation dynamics
+8.1.3 Interaction of dislocations
+8.2 Grain boundaries
+8.3 Fronts
+8.3.1 Existence of front solutions
+8.3.2 Front selection
+8.3.3 Wave-number selection
+8.4 Conclusions
+8.5 Further reading
+Patterns far from threshold
+9.1 Stripe and lattice states
+9.1.1 Goldstone modes and phase dynamics
+9.1.2 Phase diffusion equation
+9.1.3 Beyond the phase equation
+9.1.4 Wave-number selection
+9.2 Novel patterns
+9.2.1 Pinning and disorder
+9.2.2 Localized structures
+9.2.3 Patterns based on front properties
+9.2.4 Spatiotemporal chaos
+9.3 Conclusions
+9.4 Further reading
+
+249
+250
+252
+253
+253
+254
+255
+255
+256
+261
+264
+269
+270
+272
+273
+279
+281
+283
+285
+289
+290
+296
+296
+303
+307
+309
+309
+315
+317
+318
+320
+327
+331
+337
+338
+340
+342
+345
+352
+353
+
+Downloaded from https://www.cambridge.org/core. Caltech Library, on 10 Dec 2020 at 20:53:09, subject to the Cambridge Core terms of use, available
+Cambridge
+Books Online © Cambridge University Press, 2010
+at https://www.cambridge.org/core/terms.
+https://doi.org/10.1017/CBO9780511627200
+
+Contents
+
+10 Oscillatory patterns
+10.1 Convective and absolute instability
+10.2 States arising from a type-III-o instability
+10.2.1 Phenomenology
+10.2.2 Amplitude equation
+10.2.3 Phase equation
+10.2.4 Stability balloon
+10.2.5 Defects: sources, sinks, shocks, and spirals
+10.3 Unidirectional waves in a type-I-o system
+10.3.1 Amplitude equation
+10.3.2 Criterion for absolute instability
+10.3.3 Absorbing boundaries
+10.3.4 Noise-sustained structures
+10.3.5 Local modes
+10.4 Bidirectional waves in a type-I-o system
+10.4.1 Traveling and standing waves
+10.4.2 Onset in ﬁnite geometries
+10.4.3 Nonlinear waves with reﬂecting boundaries
+10.5 Waves in a two-dimensional type-I-o system
+10.6 Conclusions
+10.7 Further reading
+11 Excitable media
+11.1 Nerve ﬁbers and heart muscle
+11.1.1 Hodgkin–Huxley model of action potentials
+11.1.2 Models of electrical signaling in the heart
+11.1.3 FitzHugh–Nagumo model
+11.2 Oscillatory or excitable
+11.2.1 Relaxation oscillations
+11.2.2 Excitable dynamics
+11.3 Front propagation
+11.4 Pulses
+11.5 Waves
+11.6 Spirals
+11.6.1 Structure
+11.6.2 Formation
+11.6.3 Instabilities
+11.6.4 Three dimensions
+11.6.5 Application to heart arrhythmias
+11.7 Further reading
+
+xi
+
+358
+360
+363
+363
+365
+368
+370
+372
+379
+380
+382
+383
+384
+386
+388
+389
+390
+392
+393
+395
+396
+401
+404
+404
+411
+413
+416
+419
+420
+421
+424
+426
+430
+430
+436
+437
+439
+439
+441
+
+Downloaded from https://www.cambridge.org/core. Caltech Library, on 10 Dec 2020 at 20:53:09, subject to the Cambridge Core terms of use, available
+Cambridge
+Books Online © Cambridge University Press, 2010
+at https://www.cambridge.org/core/terms.
+https://doi.org/10.1017/CBO9780511627200
+
+xii
+
+Contents
+
+12 Numerical methods
+12.1 Introduction
+12.2 Discretization of ﬁelds and equations
+12.2.1 Finitely many operations on a ﬁnite amount of data
+12.2.2 The discretization of continuous ﬁelds
+12.2.3 The discretization of equations
+12.3 Time integration methods for pattern-forming systems
+12.3.1 Overview
+12.3.2 Explicit methods
+12.3.3 Implicit methods
+12.3.4 Operator splitting
+12.3.5 How to choose the spatial and temporal resolutions
+12.4 Stationary states of a pattern-forming system
+12.4.1 Iterative methods
+12.4.2 Newton’s method
+12.5 Conclusion
+12.6 Further reading
+Appendix 1 Elementary bifurcation theory
+Appendix 2 Multiple-scales perturbation theory
+Glossary
+References
+Index
+
+445
+445
+447
+447
+449
+451
+457
+457
+460
+465
+470
+473
+475
+476
+477
+482
+485
+496
+503
+520
+526
+531
+
+Downloaded from https://www.cambridge.org/core. Caltech Library, on 10 Dec 2020 at 20:53:09, subject to the Cambridge Core terms of use, available
+Cambridge
+Books Online © Cambridge University Press, 2010
+at https://www.cambridge.org/core/terms.
+https://doi.org/10.1017/CBO9780511627200
+
+

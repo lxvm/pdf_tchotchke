@@ -1,0 +1,206 @@
+0 "Cover" 1
+0 "Contents" 8
+0 "Preface" 14
+0 "1 Introduction" 18
+1 "1.1 The big picture: why is the Universe not boring?" 19
+1 "1.2 Convection: a ﬁrst example of a nonequilibrium system" 20
+1 "1.3 Examples of nonequilibrium patterns and dynamics" 27
+2 "1.3.1 Natural patterns" 27
+2 "1.3.2 Prepared patterns" 37
+2 "1.3.3 What are the interesting questions?" 52
+1 "1.4 New features of pattern-forming systems" 55
+2 "1.4.1 Conceptual differences" 55
+2 "1.4.2 New properties" 60
+1 "1.5 A strategy for studying pattern-forming nonequilibrium systems" 61
+1 "1.6 Nonequilibrium systems not discussed in this book" 65
+1 "1.7 Conclusion" 66
+1 "1.8 Further reading" 67
+0 "2 Linear instability: basics" 73
+1 "2.1 Conceptual framework for a linear stability analysis" 74
+1 "2.2 Linear stability analysis of a pattern-forming system" 80
+2 "2.2.1 One-dimensional Swift–Hohenberg equation" 80
+2 "2.2.2 Linear stability analysis" 81
+2 "2.2.3 Growth rates and instability diagram" 84
+1 "2.3 Key steps of a linear stability analysis" 86
+1 "2.4 Experimental investigations of linear stability" 87
+2 "2.4.1 General remarks" 87
+2 "2.4.2 Taylor–Couette instability" 91
+1 "2.5 Classiﬁcation for linear instabilities of a uniform state" 92
+2 "2.5.1 Type-I instability" 94
+2 "2.5.2 Type-II instability" 96
+2 "2.5.3 Type-III instability" 97
+1 "2.6 Role of symmetry in a linear stability analysis" 98
+2 "2.6.1 Rotationally invariant systems" 99
+2 "2.6.2 Uniaxial systems" 101
+2 "2.6.3 Anisotropic systems" 103
+2 "2.6.4 Formal discussion" 103
+1 "2.7 Conclusions" 105
+1 "2.8 Further reading" 105
+0 "3 Linear instability: applications" 113
+1 "3.1 Turing instability" 113
+2 "3.1.1 Reaction–diffusion equations" 114
+2 "3.1.2 Linear stability analysis" 116
+2 "3.1.3 Oscillatory instability" 125
+1 "3.2 Realistic chemical systems" 126
+2 "3.2.1 Experimental apparatus" 126
+2 "3.2.2 Evolution equations" 127
+2 "3.2.3 Experimental results" 133
+1 "3.3 Conclusions" 136
+1 "3.4 Further reading" 137
+0 "4 Nonlinear states" 143
+1 "4.1 Nonlinear saturation" 146
+2 "4.1.1 Complex amplitude" 147
+2 "4.1.2 Bifurcation theory" 151
+2 "4.1.3 Nonlinear stripe state of the Swift–Hohenberg equation" 154
+1 "4.2 Stability balloons" 156
+2 "4.2.1 General discussion" 156
+2 "4.2.2 Busse balloon for Rayleigh–Bénard convection" 164
+1 "4.3 Two-dimensional lattice states" 169
+1 "4.4 Non-ideal states" 175
+2 "4.4.1 Realistic patterns" 175
+2 "4.4.2 Topological defects" 177
+2 "4.4.3 Dynamics of defects" 181
+1 "4.5 Conclusions" 182
+1 "4.6 Further reading" 183
+0 "5 Models" 190
+1 "5.1 Swift–Hohenberg model" 192
+2 "5.1.1 Heuristic derivation" 193
+2 "5.1.2 Properties" 196
+2 "5.1.3 Numerical simulations" 200
+2 "5.1.4 Comparison with experimental systems" 202
+1 "5.2 Generalized Swift–Hohenberg models" 204
+2 "5.2.1 Non-symmetric model" 204
+2 "5.2.2 Nonpotential models" 205
+2 "5.2.3 Models with mean ﬂow" 205
+2 "5.2.4 Model for rotating convection" 207
+2 "5.2.5 Model for quasicrystalline patterns" 209
+1 "5.3 Order-parameter equations" 209
+1 "5.4 Complex Ginzburg–Landau equation" 213
+1 "5.5 Kuramoto–Sivashinsky equation" 214
+1 "5.6 Reaction–diffusion models" 216
+1 "5.7 Models that are discrete in space, time, or value" 218
+1 "5.8 Conclusions" 218
+1 "5.9 Further reading" 219
+0 "6 One-dimensional amplitude equation" 225
+1 "6.1 Origin and meaning of the amplitude" 228
+1 "6.2 Derivation of the amplitude equation" 231
+2 "6.2.1 Phenomenological derivation" 231
+2 "6.2.2 Deduction of the amplitude-equation parameters" 234
+2 "6.2.3 Method of multiple scales" 235
+2 "6.2.4 Boundary conditions for the amplitude equation" 236
+1 "6.3 Properties of the amplitude equation" 238
+2 "6.3.1 Universality and scales" 238
+2 "6.3.2 Potential dynamics" 241
+1 "6.4 Applications of the amplitude equation" 243
+2 "6.4.1 Lateral boundaries" 243
+2 "6.4.2 Eckhaus instability" 247
+2 "6.4.3 Phase dynamics" 251
+1 "6.5 Limitations of the amplitude-equation formalism" 254
+1 "6.6 Conclusions" 255
+1 "6.7 Further reading" 256
+0 "7 Amplitude equations for two-dimensional patterns" 261
+1 "7.1 Stripes in rotationally invariant systems" 263
+2 "7.1.1 Amplitude equation" 263
+2 "7.1.2 Boundary conditions" 265
+2 "7.1.3 Potential" 266
+2 "7.1.4 Stability balloon" 267
+2 "7.1.5 Phase dynamics" 269
+1 "7.2 Stripes in anisotropic systems" 270
+2 "7.2.1 Amplitude equation" 270
+2 "7.2.2 Stability balloon" 271
+2 "7.2.3 Phase dynamics" 272
+1 "7.3 Superimposed stripes" 272
+2 "7.3.1 Amplitude equations" 273
+2 "7.3.2 Competition between stripes and lattices" 278
+2 "7.3.3 Hexagons in the absence of ﬁeld-inversion symmetry" 281
+2 "7.3.4 Spatial variations" 286
+2 "7.3.5 Cross-stripe instability" 287
+1 "7.4 Conclusions" 289
+1 "7.5 Further reading" 290
+0 "8 Defects and fronts" 296
+1 "8.1 Dislocations" 298
+2 "8.1.1 Stationary dislocation" 300
+2 "8.1.2 Dislocation dynamics" 302
+2 "8.1.3 Interaction of dislocations" 306
+1 "8.2 Grain boundaries" 307
+1 "8.3 Fronts" 313
+2 "8.3.1 Existence of front solutions" 313
+2 "8.3.2 Front selection" 320
+2 "8.3.3 Wave-number selection" 324
+1 "8.4 Conclusions" 326
+1 "8.5 Further reading" 326
+0 "9 Patterns far from threshold" 332
+1 "9.1 Stripe and lattice states" 334
+2 "9.1.1 Goldstone modes and phase dynamics" 335
+2 "9.1.2 Phase diffusion equation" 337
+2 "9.1.3 Beyond the phase equation" 344
+2 "9.1.4 Wave-number selection" 348
+1 "9.2 Novel patterns" 354
+2 "9.2.1 Pinning and disorder" 355
+2 "9.2.2 Localized structures" 357
+2 "9.2.3 Patterns based on front properties" 359
+2 "9.2.4 Spatiotemporal chaos" 362
+1 "9.3 Conclusions" 369
+1 "9.4 Further reading" 370
+0 "10 Oscillatory patterns" 375
+1 "10.1 Convective and absolute instability" 377
+1 "10.2 States arising from a type-III-o instability" 380
+2 "10.2.1 Phenomenology" 380
+2 "10.2.2 Amplitude equation" 382
+2 "10.2.3 Phase equation" 385
+2 "10.2.4 Stability balloon" 387
+2 "10.2.5 Defects: sources, sinks, shocks, and spirals" 389
+1 "10.3 Unidirectional waves in a type-I-o system" 396
+2 "10.3.1 Amplitude equation" 397
+2 "10.3.2 Criterion for absolute instability" 399
+2 "10.3.3 Absorbing boundaries" 400
+2 "10.3.4 Noise-sustained structures" 401
+2 "10.3.5 Local modes" 403
+1 "10.4 Bidirectional waves in a type-I-o system" 405
+2 "10.4.1 Traveling and standing waves" 406
+2 "10.4.2 Onset in ﬁnite geometries" 407
+2 "10.4.3 Nonlinear waves with reﬂecting boundaries" 409
+1 "10.5 Waves in a two-dimensional type-I-o system" 410
+1 "10.6 Conclusions" 412
+1 "10.7 Further reading" 413
+0 "11 Excitable media" 418
+1 "11.1 Nerve ﬁbers and heart muscle" 421
+2 "11.1.1 Hodgkin–Huxley model of action potentials" 421
+2 "11.1.2 Models of electrical signaling in the heart" 428
+2 "11.1.3 FitzHugh–Nagumo model" 430
+1 "11.2 Oscillatory or excitable" 433
+2 "11.2.1 Relaxation oscillations" 436
+2 "11.2.2 Excitable dynamics" 437
+1 "11.3 Front propagation" 438
+1 "11.4 Pulses" 441
+1 "11.5 Waves" 443
+1 "11.6 Spirals" 447
+2 "11.6.1 Structure" 447
+2 "11.6.2 Formation" 453
+2 "11.6.3 Instabilities" 454
+2 "11.6.4 Three dimensions" 456
+2 "11.6.5 Application to heart arrhythmias" 456
+1 "11.7 Further reading" 458
+0 "12 Numerical methods" 462
+1 "12.1 Introduction" 462
+1 "12.2 Discretization of ﬁelds and equations" 464
+2 "12.2.1 Finitely many operations on a ﬁnite amount of data" 464
+2 "12.2.2 The discretization of continuous ﬁelds" 466
+2 "12.2.3 The discretization of equations" 468
+1 "12.3 Time integration methods for pattern-forming systems" 474
+2 "12.3.1 Overview" 474
+2 "12.3.2 Explicit methods" 477
+2 "12.3.3 Implicit methods" 482
+2 "12.3.4 Operator splitting" 487
+2 "12.3.5 How to choose the spatial and temporal resolutions" 490
+1 "12.4 Stationary states of a pattern-forming system" 492
+2 "12.4.1 Iterative methods" 493
+2 "12.4.2 Newton’s method" 494
+1 "12.5 Conclusion" 499
+1 "12.6 Further reading" 502
+0 "Appendix 1 Elementary bifurcation theory" 513
+0 "Appendix 2 Multiple-scales perturbation theory" 520
+0 "Glossary" 537
+0 "References" 543
+0 "Index" 548
+0 "Back Cover" 553

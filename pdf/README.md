@@ -1,0 +1,60 @@
+When creating bookmarks for a pdf text book, it is nice not to have to type everything yourself.
+Hopefully this manual outlines the process effectively.
+This is an accompaniment to the bkmk.py script
+
+The most manual and straightforward option is to simply type up the TOC yourself.
+Using the [`cpdf`](https://github.com/coherentgraphics/cpdf-binaries) utility the bookmark file outline is quite straight forwards.
+The syntax for each line is
+```
+[index] "[text]" [page number]
+```
+Where each line represents a bookmark entry.
+
+The `[index]` should be an integer representing the level of the bookmark entry in the index.
+This numbering starts at 0, so a line with index 0 will appear at the top level of the bookmark.
+If a line following 0 starts with a 1, that line will appear as a subentry to the 0
+And a line starting with a 2 and following a 1 will appear as a subentry to the 1.
+This can of course be repeated. 
+It is common to group all entries in the same level of a TOC with the same index.
+For example, all the beginnings of chapters may have index 0, their sections index 1, subsections index 2.
+If the index goes beyond 2 you are probably dealing with a very large and detailed document!
+It is best to reproduce the original structure of the TOC though, so if index larger than 2 is required then use it.
+
+The `"[text]"` entry contains the text describing the bookmark entry.
+It is often the title of the chapter or the name of the section.
+Quotations surrounding the text are required.
+
+The `[page number]` is the page number in the pdf at which the entry appears.
+This is typically offset by a certain integer from the page numbers appearing in the TOC.
+Because the Title page, TOC, and preface are usually numbered in roman numerals, this is why.
+The first page of the pdf you see when it opens is page 1, and then the numbers go up from there.
+The page number of the page corresponding to page 1 in the TOC indicates the offset that needs to be applied to all entries in the TOC.
+For example, if page 1 in the TOC is page 15 in the pdf, then 14 must be added to each page number from the TOC.
+It is often most convenient to automate this step.
+
+The automation of pdf bookmark generation from a TOC seems like it would have utilities available for it.
+You may fall into a variety of cases:
+- The document was scanned, but without text identification, so the pdf is just a series of images
+- The document was scanned with text identification
+- The document was generated as a pdf (such as with LaTeX) and this is the best case scenario
+
+In the first case you have no option but to type the table of contents yourself because one cannot retrieve its text with computer tools.
+Presumably, if you had a software that could identify the characters and words in those images as text and associate those with the pdf, then you are in the second case.
+
+If the document was scanned with text identification, you can copy and paste the text into a file you will process.
+Libraries such as `poppler-utils` have tools such as `pdftotext` which could get the text for you.
+However, the logical structure of the TOC is often lost in the output of that program.
+For instance it may read the TOC by columns instead of by rows and you would have to program with that structure in mind.
+
+If the document was generated as a pdf you can always copy and paste but you may have better luck using `pdftotext`, but the same applies.
+
+The next stage is to prepare that text for a script that will rewrite it into the syntax described above.
+One should run spellcheck on the copied text because text identification software often makes mistakes even if the quality of the scanned pdf is good.
+Often, in the case of Mathematical textbooks there will be misread mathematical symbols (e.g. Infinity appears as "00") that you can fix.
+Then one should consolidate the text of each TOC line onto a single line (often newlines appear because there are linebreaks in the pdf).
+Then move the page numbers to the line following the corresponding entry.
+So now a script can read in the TOC in pairs of lines: one with the text and another with the page number (and the index will be inferred by the script).
+
+Now we can run that file through bkmk.py and use the output.
+Some elements of the output will have to be reviewed by hand (such as entries with roman numerals) and some entries will have to be added by hand (such as the cover or preface) that weren't in the original TOC to begin with.
+Then we can run `cpdf -add-bookmarks bkmk_file.txt document.pdf -o document_bkmkd.pdf` and use that pdf.
