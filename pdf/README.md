@@ -1,7 +1,7 @@
 # PDF Bookmarking
 Why? To make navigating pdf textbooks as easy as real ones.
 
-##Summary
+## Summary
 - `filenames.py`: A tiny python module for filename handling. It will import if on `PYTHONPATH`.
 - `interleaving.py`: A python script for interleaving/alternating lines matching certain TOC patterns. It will run if on `PATH`.
 - `bkmk.py`: A python script for converting a TOC into a `cpdf` bookmarks file. It will run if on `PATH`.
@@ -11,7 +11,7 @@ Why? To make navigating pdf textbooks as easy as real ones.
 - `sample2.txt`: The output of `interleaving.py` on `sample1.txt`.
 - `sample3.txt`: The output of `bkmk.py` on `sample2.txt`. Ready for `cpdf -add-bookmarks [bkmk file] [pdf input file] -o [pdf output file]`.
 
-##Long Description
+## Long Description
 
 When creating bookmarks for a pdf text book, it is nice not to have to type everything yourself.
 Hopefully this manual outlines the process effectively.
