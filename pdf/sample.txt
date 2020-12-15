@@ -31,6 +31,8 @@ Linear instability: basics
 2.4.1 General remarks
 2.4.2 Taylor–Couette instability
 
+vii
+
 page xiii
 1
 2
@@ -56,14 +58,6 @@ page xiii
 70
 70
 74
-
-vii
-
-Downloaded from https://www.cambridge.org/core. Caltech Library, on 10 Dec 2020 at 20:53:09, subject to the Cambridge Core terms of use, available
-Cambridge
-Books Online © Cambridge University Press, 2010
-at https://www.cambridge.org/core/terms.
-https://doi.org/10.1017/CBO9780511627200
 
 viii
 
@@ -150,12 +144,6 @@ Nonlinear states
 164
 165
 166
-
-Downloaded from https://www.cambridge.org/core. Caltech Library, on 10 Dec 2020 at 20:53:09, subject to the Cambridge Core terms of use, available
-Cambridge
-Books Online © Cambridge University Press, 2010
-at https://www.cambridge.org/core/terms.
-https://doi.org/10.1017/CBO9780511627200
 
 Contents
 
@@ -244,12 +232,6 @@ ix
 246
 246
 248
-
-Downloaded from https://www.cambridge.org/core. Caltech Library, on 10 Dec 2020 at 20:53:09, subject to the Cambridge Core terms of use, available
-Cambridge
-Books Online © Cambridge University Press, 2010
-at https://www.cambridge.org/core/terms.
-https://doi.org/10.1017/CBO9780511627200
 
 x
 
@@ -341,12 +323,6 @@ Patterns far from threshold
 352
 353
 
-Downloaded from https://www.cambridge.org/core. Caltech Library, on 10 Dec 2020 at 20:53:09, subject to the Cambridge Core terms of use, available
-Cambridge
-Books Online © Cambridge University Press, 2010
-at https://www.cambridge.org/core/terms.
-https://doi.org/10.1017/CBO9780511627200
-
 Contents
 
 10 Oscillatory patterns
@@ -431,12 +407,6 @@ xi
 439
 441
 
-Downloaded from https://www.cambridge.org/core. Caltech Library, on 10 Dec 2020 at 20:53:09, subject to the Cambridge Core terms of use, available
-Cambridge
-Books Online © Cambridge University Press, 2010
-at https://www.cambridge.org/core/terms.
-https://doi.org/10.1017/CBO9780511627200
-
 xii
 
 Contents
@@ -486,11 +456,5 @@ Index
 520
 526
 531
-
-Downloaded from https://www.cambridge.org/core. Caltech Library, on 10 Dec 2020 at 20:53:09, subject to the Cambridge Core terms of use, available
-Cambridge
-Books Online © Cambridge University Press, 2010
-at https://www.cambridge.org/core/terms.
-https://doi.org/10.1017/CBO9780511627200
 
 
