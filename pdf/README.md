@@ -81,8 +81,8 @@ You may fall into a variety of cases:
 - The document was scanned with text identification
 - The document was generated as a pdf (such as with LaTeX) and this is the best case scenario
 
-In the first case you have no option but to type the table of contents yourself because one cannot retrieve its text with computer tools.
-Presumably, if you had a software that could identify the characters and words in those images as text and associate those with the pdf, then you are in the second case.
+In the first case you could just type the table of contents, but people have made optical-character recognition software (OCR) to do this.
+If you can get programs such as [`tesseract`](https://github.com/tesseract-ocr/tesseract) to work, or derived utilities such as [`pdfsandwich`](https://sourceforge.net/projects/pdfsandwich/), then you'll be in the second case.
 
 If the document was scanned with text identification, you can copy and paste the text into a file you will process.
 Libraries such as `poppler-utils` have tools such as `pdftotext` which could get the text for you.
