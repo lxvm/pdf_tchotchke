@@ -10,7 +10,7 @@
 # A numbering adjustment is then made to the page numbers.
 # The index level of each bookmark entry is inferred using some simple rules.
 # Then the array is written to a txt file with the correct bookmark syntax.
-# Cpdf  and Ghostscript/pdfmark syntaxes are supported.
+# Cpdf and Ghostscript/pdfmark and pdftk syntaxes are supported.
 
 # Start with defintions
 import re , filenames , argparse
@@ -23,13 +23,17 @@ BKMK_SYNTAX = {
         # The data to print corresponds to (x,y,z) = (index,title,page)
         "cpdf"   : {
             "print" : (lambda x,y,z: f"{x} \"{y}\" {z}\n"),
-            "sense" : r"",
+            "sense" : r"(?P<index>\d+) \"(?P<title>.+)\" (?P<page>\d+).*"
             },
         "gs"    : {
-            "print" : (lambda x,y,z: f"[ \Count {x} \Page {z} \Title ({y}) \OUT pdfmark\n"),
-            "sense" : r""
-            }
-        }
+            "print" : (lambda x,y,z: f"\[ \Count {x} \Page {z} \Title ({y}) \OUT pdfmark\n"),
+            "sense" : r"\\\[ \\Count (?P<index>\d+) \\Page (?P<page>\d+) \\Title \((?P<title>.+)\) \\OUT pdfmark.*"
+            },
+        "pdftk" : {
+            "print" : (lambda x,y,z: f"BookmarkTitle: {y}\nBookmarkLevel: {x}\nBookmarkPageNumber: {z}\n"),
+            "sense"  : r"BookmarkTitle: (?P<title>.+)\nBookmarkLevel: (?P<index>\d+)\nBookmarkPageNumber: (?P<page>\d+).*"
+             }
+    }
 
 
 def getIndex(entry):
@@ -53,19 +57,26 @@ def getIndex(entry):
         repetitions += 1
     return repetitions - 1
 
-def whichSyntax(entry):
+def whichSyntax(entries):
     '''
     Tests whether the given entry is a  bookmark
 
     Arguments:
-        String : hopefully a line from a bookmark file
+        List : hopefully lines from a bookmark file
 
     Returns:
-        String or None : "cpdf" or "gs" syntax, None if not any syntax
+        String or Error : "cpdf" or "gs" syntax, None if not any syntax
     '''
-    pass
 
-def convertSyntax(entries,newsyntax):
+    if "BookmarkBegin" in entries[0]:
+        return "pdftk"
+
+    for e in list(BKMK_SYNTAX):
+        if bool(re.match(BKMK_SYNTAX[e]["sense"],entries[0])):
+            return e
+    raise UserWarning("The first line of file is does not match any supported syntax")
+
+def convertSyntax(entries,syntax):
     '''
     Converts one bookmark file syntax into another file.
     Should detect the input syntax automatically and write
@@ -75,7 +86,26 @@ def convertSyntax(entries,newsyntax):
     to add the bookmarks.
     But maybe just do this for completeness.
     '''
-    pass
+
+    detected = whichSyntax(entries)
+    output = []
+    if syntax == "pdftk":
+        output.append("BookmarkBegin\n")
+
+    for i,entry in enumerate(entries):
+        if detected == "pdftk":
+            # have to get around the fact that pdftk bookmark lines come in trios
+            if i % 3 == 1:
+                matches = re.search(BKMK_SYNTAX["pdftk"]["sense"],"\n".join(entries[i:i+3])+"\n")
+                (index,title,page) = (matches.group("index"),matches.group("title"),matches.group("page"))
+                output.append(BKMK_SYNTAX[syntax]["print"](index,title,page))
+            continue
+        else:
+            matches = re.search(BKMK_SYNTAX[detected]["sense"],entry)
+            (index,title,page) = (matches.group("index"),matches.group("title"),matches.group("page"))
+            output.append(BKMK_SYNTAX[syntax]["print"](index,title,page))
+
+    return output
 
 def createTocFromText(data,syntax):
     '''
@@ -100,6 +130,8 @@ def createTocFromText(data,syntax):
 
     output = []
     # finish and export bookmarks
+    if syntax == "pdftk":
+        output.append("BookmarkBegin\n")
     for i in range(int(length/2)):
         # Check that even line numbers are digits (roman numerals not allowed)
         assert data[2*i+1].isdigit()
@@ -125,24 +157,30 @@ def main():
     This handles its command-line arguments and executes the requested functions.
     '''
 
-    print("bkmk.py - a script to manipulate pdf bookmarks\n")
-    # Define command-line arguments
-    parser = argparse.ArgumentParser(description = \
-            ''' \
-            a script to manipulate pdf bookmarks    \
-            ''')
-    # This should have a required action, i.e. "convert" or "create"
-    # and an output format, i.e. "cpdf" or "gs"
-    # TODO: accept filenames from commandline
+    # Define available commands
+    commands = {
+            "create" : createTocFromText,
+            "convert" : convertSyntax
+            }
 
-    parser.add_argument("action", choices=["create","convert"], help="take action", default="create")
-    parser.add_argument("format", choices=list(BKMK_SYNTAX), help="choose format",default=list(BKMK_SYNTAX)[0])
-    parser.add_argument("-i","--input", help="input file")
-    parser.add_argument("-o","--output", help="output file")
+    # Define command-line arguments
+    parser = argparse.ArgumentParser(   \
+            description='''a script to produce pdf bookmarks''')
+
+    parser.add_argument("action", choices=list(commands),   \
+            help="choose an action")
+    parser.add_argument("format", choices=list(BKMK_SYNTAX),    \
+            help="choosebookmark output format")
+    parser.add_argument("-i","--input", \
+            help="input file name")
+    parser.add_argument("-o","--output",    \
+            help="output file name")
 
     args = parser.parse_args()  
 
-    filenames.fileOperate(createTocFromText, \
+    print("bkmk.py - a script to manipulate pdf bookmarks\n")
+
+    filenames.fileOperate(commands[args.action], \
             newlines=False,  \
             readfile=args.input, writefile=args.output,   \
             readext=".txt",writeext=".txt", \

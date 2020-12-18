@@ -3,51 +3,70 @@
 # interleave.py
 # A script to automatic interleave lines between blocks in a text file
 # Written by Lorenzo Van Muñoz
-# Last Updated Dec 14 2020
+# Last Updated Dec 17 2020
 
-import os,sys,filenames
+import argparse , filenames
 
-# Start message
-print("interleave.py - a script to interleave lines\n")
+def interleave(lines):
+    '''
+    Read a file with alternating blocks of entries and page numbers and interleave them so that they alternate line by line
 
-# Change to current working directory
-os.chdir(os.getcwd())
+    Arguments:
+        List : containing strings read in from a pdf's TOC
 
-filepath,outpath = filenames.fileio(ext=".txt")
+    Returns:
+        List : a permutation of the list elements from the input
+    '''
 
-# import file
-with open(filepath,"r") as file:
-    data = file.read()
+    # identify numerical lines representing page numbers
+    num_indices = []
+    entry_indices = []
+    for i,e in enumerate(lines):
+        # ensure no empty lines
+        if not bool(e):
+            raise ValueError("Input file contains empty lines not allowed")
+        if e.isdigit():
+            num_indices.append(i)
+        else:
+            entry_indices.append(i)
 
-# Get each line in file
-lines = data.rstrip().split("\n")
+    output = []
+    # perform the permutations (entries alternate with numbers)
+    for i,_ in enumerate(lines):
+        if i % 2 == 0:
+            output.append(lines[entry_indices[int(i/2)]] + "\n")
+        else:
+            output.append(lines[num_indices[int((i-1)/2)]] + "\n")
+            
+    return output
 
 
-# identify numerical lines representing page numbers
-num_indices = []
-entry_indices = []
-for i,e in enumerate(lines):
-    # ensure no empty lines
-    if not bool(e):
-        raise ValueError("Input file contains empty lines not allowed")
-    if e.isdigit():
-        num_indices.append(i)
-    else:
-        entry_indices.append(i)
+def main():
+    '''
+    This handles the input and output and command line arguments for interleaving.py
+    '''
+    
+    #define command line arguments
+    parser = argparse.ArgumentParser(   \
+            description='''a script to interleave lines''')
 
-output = []
-# perform the permutations (entries alternate with numbers)
-for i,_ in enumerate(lines):
-    if i % 2 == 0:
-        output.append(lines[entry_indices[int(i/2)]])
-    else:
-        output.append(lines[num_indices[int((i-1)/2)]])
+    parser.add_argument("-i","--input", \
+            help="input file name")
+    parser.add_argument("-o","--output",    \
+            help="output file name")
 
-# Write to file
-with open(outpath,"w") as file:
-    for line in output:
-        file.write(line+"\n")
+    args = parser.parse_args()  
 
-# End script
-print("Lines interleaved")
-sys.exit()
+    print("interleave.py - a script to interleave lines\n")
+
+    filenames.fileOperate(interleave,   \
+        newlines=False,  \
+        readfile=args.input, writefile=args.output,   \
+        readext=".txt",writeext=".txt")
+    
+    print("Lines interleaved")
+    return
+
+if __name__ == "__main__":
+    main()
+    raise SystemExit

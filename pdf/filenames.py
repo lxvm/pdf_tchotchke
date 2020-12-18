@@ -2,13 +2,15 @@
 
 # filenames.py
 # This module has some simple file I/O functions for UNIX systems 
-# It is a wrapper for the builtin os module to make file reading/writing
-# easy and reliable
+# It is a wrapper for the builtin os module to make file reading
+# and writing easy and reliable
+# Written by Lorenzo Van Muñoz
+# Last Updated Dec 17 2020
 
 # Features safe writing to file by modifying file name,
 # verifies readability/writability for requested paths,
 # it only does not accept an empty filename or non-extant
-# files to read.
+# files to read. It supports extension auto-completion.
 # Also integrates the filename acquisition process with
 # external modules to do functions on files
 
