@@ -36,27 +36,6 @@ BKMK_SYNTAX = {
     }
 
 
-def getIndex(entry):
-    '''
-    Determine the index of an entry (this is simplistic and the logic should be refined depending on the content)
-    
-    Arguments:
-        String : ideally a line from a table of contents
-
-    Returns:
-        Integer : 0 if the line starts without an integer or an integer without trailing decimal
-                  1 if the line starts with a decimal like X.X where X are integers
-                  2 if the line starts with a double decimal like X.X.X
-                  3 the pattern goes on
-    '''
-    #TODO make an option to delete the numbers for the final TOC
-    
-    repetitions = 0
-    # This enforces no empty lines as well as getting index
-    while bool(re.match("^\w+" + repetitions * "\.[0-9]+",entry)):
-        repetitions += 1
-    return repetitions - 1
-
 def whichSyntax(entries):
     '''
     Tests whether the given entry is a  bookmark
@@ -75,6 +54,7 @@ def whichSyntax(entries):
         if bool(re.match(BKMK_SYNTAX[e]["sense"],entries[0])):
             return e
     raise UserWarning("The first line of file is does not match any supported syntax")
+
 
 def convertSyntax(entries,syntax):
     '''
@@ -106,6 +86,29 @@ def convertSyntax(entries,syntax):
             output.append(BKMK_SYNTAX[syntax]["print"](index,title,page))
 
     return output
+
+
+def getIndex(entry):
+    '''
+    Determine the index of an entry (this is simplistic and the logic should be refined depending on the content)
+    
+    Arguments:
+        String : ideally a line from a table of contents
+
+    Returns:
+        Integer : 0 if the line starts without an integer or an integer without trailing decimal
+                  1 if the line starts with a decimal like X.X where X are integers
+                  2 if the line starts with a double decimal like X.X.X
+                  3 the pattern goes on
+    '''
+    #TODO make an option to delete the numbers for the final TOC
+    
+    repetitions = 0
+    # This enforces no empty lines as well as getting index
+    while bool(re.match("^\w+" + repetitions * "\.[0-9]+",entry)):
+        repetitions += 1
+    return repetitions - 1
+
 
 def createTocFromText(data,syntax):
     '''
@@ -143,6 +146,7 @@ def createTocFromText(data,syntax):
 
     return output
 
+
 def completeTOC():
     '''
     This function calls either cpdf or gs to complete the pdf with its bookmarks.
@@ -150,6 +154,7 @@ def completeTOC():
     Needs to ask for the pdf file to add the bookmarks to.
     '''
     pass
+
 
 def main():
     '''
@@ -189,6 +194,7 @@ def main():
     # Close script
     print("\nBookmarks finished!")
     return
+
 
 # run script if called from command line
 if __name__ == "__main__":
