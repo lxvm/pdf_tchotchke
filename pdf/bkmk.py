@@ -3,32 +3,34 @@
 # bkmk.py
 # A script to generate pdf bookmarks in cpdf syntax
 # Written by Lorenzo Van Muñoz
-# Last updated Dec 14 2020
+# Last updated Dec 17 2020
 
 # This script imports a txt file whose lines come in text and page number pairs.
 # It then places these pairs into an array.
 # A numbering adjustment is then made to the page numbers.
 # The index level of each bookmark entry is inferred using some simple rules.
-# Then the array is written to a txt file with the correct syntax for cpdf bookmarks.
+# Then the array is written to a txt file with the correct bookmark syntax.
+# Cpdf  and Ghostscript/pdfmark syntaxes are supported.
 
-import os,sys,filenames,re
+# Start with defintions
+import re , filenames , argparse
 
-# Start script
-print("bkmk.py - a script to make pdf bookmarks\n")
+# Global variable syntax data structure
+BKMK_SYNTAX = {
+        # Each syntax format has two properties: a print statement to
+        # print data to that format and a sense statement which is a
+        # regular expression to detect whether a line has that format
+        # The data to print corresponds to (x,y,z) = (index,title,page)
+        "cpdf"   : {
+            "print" : (lambda x,y,z: f"{x} \"{y}\" {z}\n"),
+            "sense" : r"",
+            },
+        "gs"    : {
+            "print" : (lambda x,y,z: f"[ \Count {x} \Page {z} \Title ({y}) \OUT pdfmark\n"),
+            "sense" : r""
+            }
+        }
 
-# Change working directory to directory where script was called from
-# whereas the script is run from sys.path[0]
-os.chdir(os.getcwd())
-
-filepath,outpath = filenames.fileio(ext=".txt")
-
-# import file
-with open(filepath,"r") as file:
-    # read in file as a contiguous string
-    data = file.read()
-
-# Get each line in file (excluding empty line and newline characters)
-lines = data.rstrip().split("\n")
 
 def getIndex(entry):
     '''
@@ -43,35 +45,114 @@ def getIndex(entry):
                   2 if the line starts with a double decimal like X.X.X
                   3 the pattern goes on
     '''
-    #TODO make n option to delete the numbers for the final TOC
-    #import re
+    #TODO make an option to delete the numbers for the final TOC
+    
     repetitions = 0
     # This enforces no empty lines as well as getting index
     while bool(re.match("^\w+" + repetitions * "\.[0-9]+",entry)):
         repetitions += 1
     return repetitions - 1
 
-# there has to be an even number of lines (entries come in pairs)
-length = len(lines)
-assert length % 2 == 0
+def whichSyntax(entry):
+    '''
+    Tests whether the given entry is a  bookmark
 
-# Ask for the page offset 
-offset_str = input(f"Enter the page in the pdf for the following TOC entry:\nText: {lines[0]}\nPage:{lines[1]}\n> ")
-offset = int(offset_str) - int(lines[1])
+    Arguments:
+        String : hopefully a line from a bookmark file
 
-# finish and export bookmarks
-entries = []
-with open(outpath,"w") as output:
+    Returns:
+        String or None : "cpdf" or "gs" syntax, None if not any syntax
+    '''
+    pass
+
+def convertSyntax(entries,newsyntax):
+    '''
+    Converts one bookmark file syntax into another file.
+    Should detect the input syntax automatically and write
+    to the specified syntax.
+    This isn't a necessary feature since if the bookmark file
+    is already there, then just use the corresponding program
+    to add the bookmarks.
+    But maybe just do this for completeness.
+    '''
+    pass
+
+def createTocFromText(data,syntax):
+    '''
+    This function takes lines from a bookmarks in a raw text file and outputs them to a specified bookmark syntax.
+    It also needs to ask interactively for the page offset to calculate the page numbering right.
+
+    Arguments:
+        List : has the content of f.readlines() from an input file generated from the text of a pdf TOC and should have bookmark text entries on the odd numbered lines with corresponding pagenumbers on the even numbered lines
+        String : either "cpdf" or "gs", representing the output syntax
+
+    Return:
+        List : a list of strings where the strings are the finalized bookmark entries
+    '''
+    
+    formatfn = BKMK_SYNTAX[syntax]["print"]
+    # there has to be an even number of lines (entries come in pairs)
+    length = len(data)
+    assert length % 2 == 0
+    # Ask for the page offset 
+    offset_str = input(f"Enter the page in the pdf for the following TOC entry:\nText: {data[0]}\nPage:{data[1]}\n> ")
+    offset = int(offset_str) - int(data[1])
+
+    output = []
+    # finish and export bookmarks
     for i in range(int(length/2)):
         # Check that even line numbers are digits (roman numerals not allowed)
-        assert lines[2*i+1].isdigit()
-        # Compile each entry with structure[index, text, page number]
-        entries.append([getIndex(lines[2*i]),lines[2*i],lines[2*i+1]])
-        # Apply page offset
-        entries[i][2] = int(entries[i][2]) + offset
-        # Write to file with cpdf syntax
-        output.write(f"{entries[i][0]} \"{entries[i][1]}\" {entries[i][2]}\n")
+        assert data[2*i+1].isdigit()
+        # Compile entry
+        output.append(formatfn( \
+            getIndex(data[2*i]),   \
+            data[2*i], \
+            (int(data[2*i+1]) + offset)))
 
-# Close script
-print("\nBookmarks finished!")
-sys.exit()
+    return output
+
+def completeTOC():
+    '''
+    This function calls either cpdf or gs to complete the pdf with its bookmarks.
+    Should use the subprocess module.
+    Needs to ask for the pdf file to add the bookmarks to.
+    '''
+    pass
+
+def main():
+    '''
+    Run the bkmk.py script.
+    This handles its command-line arguments and executes the requested functions.
+    '''
+
+    print("bkmk.py - a script to manipulate pdf bookmarks\n")
+    # Define command-line arguments
+    parser = argparse.ArgumentParser(description = \
+            ''' \
+            a script to manipulate pdf bookmarks    \
+            ''')
+    # This should have a required action, i.e. "convert" or "create"
+    # and an output format, i.e. "cpdf" or "gs"
+    # TODO: accept filenames from commandline
+
+    parser.add_argument("action", choices=["create","convert"], help="take action", default="create")
+    parser.add_argument("format", choices=list(BKMK_SYNTAX), help="choose format",default=list(BKMK_SYNTAX)[0])
+    parser.add_argument("-i","--input", help="input file")
+    parser.add_argument("-o","--output", help="output file")
+
+    args = parser.parse_args()  
+
+    filenames.fileOperate(createTocFromText, \
+            newlines=False,  \
+            readfile=args.input, writefile=args.output,   \
+            readext=".txt",writeext=".txt", \
+            syntax=args.format)
+
+    # Close script
+    print("\nBookmarks finished!")
+    return
+
+# run script if called from command line
+if __name__ == "__main__":
+    main()    
+    raise SystemExit
