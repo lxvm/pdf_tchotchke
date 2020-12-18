@@ -26,8 +26,8 @@ BKMK_SYNTAX = {
             "sense" : r"(?P<index>\d+) \"(?P<title>.+)\" (?P<page>\d+).*"
             },
         "gs"    : {
-            "print" : (lambda x,y,z: f"\[ \Count {x} \Page {z} \Title ({y}) \OUT pdfmark\n"),
-            "sense" : r"\\\[ \\Count (?P<index>\d+) \\Page (?P<page>\d+) \\Title \((?P<title>.+)\) \\OUT pdfmark.*"
+            "print" : (lambda x,y,z: f"[ /Count {x} /Page {z} /Title ({y}) /OUT pdfmark\n"),
+            "sense" : r"\[ /Count (?P<index>\d+) /Page (?P<page>\d+) /Title \((?P<title>.+)\) /OUT pdfmark.*"
             },
         "pdftk" : {
             "print" : (lambda x,y,z: f"BookmarkTitle: {y}\nBookmarkLevel: {x}\nBookmarkPageNumber: {z}\n"),
