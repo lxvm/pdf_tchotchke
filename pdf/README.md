@@ -100,4 +100,16 @@ So now a script can read in the TOC in pairs of lines: one with the text and ano
 
 Now we can run that file through bkmk.py and use the output.
 Some elements of the output will have to be reviewed by hand (such as entries with roman numerals) and some entries will have to be added by hand (such as the cover or preface) that weren't in the original TOC to begin with.
-Then we can run `cpdf -add-bookmarks bkmk_file.txt document.pdf -o document_bkmkd.pdf` and use that pdf.
+
+## Commands
+
+### Getting bookmark data from a pdf
+
+- `cpdf -list-bookmarks in.pdf > bkmk.txt`
+- `pdftk in.pdf dump_data output bkmk.txt`
+
+### Writing bookmark data to a pdf
+
+- `cpdf -add-bookmarks bkmk.txt in.pdf -o out.pdf`
+- `pdftk in.pdf update_info bkmk.txt output out.pdf`
+- `gs -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=out.pdf in*.pdf bkmk.txt`
