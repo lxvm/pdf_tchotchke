@@ -179,7 +179,6 @@ def fileIO(readfile="",writefile="",readext="",writeext=""):
         String : a filename that will be read from (optional)
         String : a filename that will be written to (optional)
         String : a file extension (optional) (this is appended to the output file if not present already)
-        Note that the ext argument is used when writefile is specified. This behavior can be changed
 
     Returns:
         Tuple of strings: (input_file_path,output_file_path) : these are absolute paths as this may be helpful
@@ -188,7 +187,7 @@ def fileIO(readfile="",writefile="",readext="",writeext=""):
     return (fileIn(readfile,readext),fileOut(writefile,writeext))
 
 
-def fileOperate(function,newlines=False,readfile="",writefile="",readext="",writeext="",*args,**kwargs):
+def fileOperate(function,newlines=True,readfile="",writefile="",readext="",writeext="",readmode="r",writemode="w",*args,**kwargs):
     '''
     Accepts a function and input/output files, and applies the function to the input, writing the results to the output
     
@@ -201,6 +200,8 @@ def fileOperate(function,newlines=False,readfile="",writefile="",readext="",writ
         String : filename to write to
         String : extension for the input file
         String : extension for the output file
+        String : specify reading mode [for helptype help(open) at python interpreter] (defaults to text, can specify bytes with 'rb')
+        String : specify writing mode (defaults to text, can specify bytes with 'wb')
 
     Returns:
         None, though it will write a new file according to "writefile"
@@ -208,17 +209,14 @@ def fileOperate(function,newlines=False,readfile="",writefile="",readext="",writ
 
     readfile,writefile = fileIO(readfile,writefile,readext,writeext)
     
-    with open(readfile,"r") as f:
-        data = f.readlines()
+    data = open(readfile,readmode).readlines()
     if not newlines:
         data = [e.rstrip() for e in data]
 
     output = function(data,*args,**kwargs)
     assert type(output) == list
 
-    with open(writefile,"w") as g:
-        for e in output:
-            g.write(e)
+    open(writefile,writemode).writelines(output)
 
     return
 
