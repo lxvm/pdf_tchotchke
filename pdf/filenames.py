@@ -56,7 +56,7 @@ def appendExt(filename,ext=""):
     return filename
 
 
-def getSafePath(takenname):
+def getSafePath(chosenname,overwrite=False):
     '''
     Creates a file name in the current directory which won't overwrite any existing files.
 
@@ -67,21 +67,25 @@ def getSafePath(takenname):
         String : a new filename that can be written to
     '''
     
-    # A safe name to not overwrite any files
-    # Separate the filename from the leftmost period which marks the extension
-    path_components = takenname.split(".",1)
-    safepath = path_components[0]
-    if len(path_components) <= 1:
-        ext = ""
+    if not overwrite:
+        # A safe name to not overwrite any files
+        # Separate the filename from the leftmost period which marks the extension
+        path_components = chosenname.rsplit(".",1)
+        safepath = path_components[0]
+        # when there is no extension provided, ignore the extension
+        if len(path_components) <= 1:
+            ext = ""
+        else:
+            ext = "." + path_components[1] 
+        # add _(#) to the end of file name
+        count = 0
+        while os.path.exists(safepath + ext):
+            safepath = path_components[0] + f"_({count})"
+            count += 1
+        safepath += ext
+        print(f"UserWarning: {chosenname} is already taken: Saving to {safepath} instead")
     else:
-        ext = "." + path_components[1] 
-    # add _(#) to the end of file name
-    count = 0
-    while os.path.exists(safepath + ext):
-        safepath = path_components[0] + f"_({count})"
-        count += 1
-    safepath += ext
-    print(f"UserWarning: {takenname} is already taken: Saving to {safepath} instead")
+        safepath = chosename
     # Check for write permissions in write dir for backups
     if not os.access(os.path.dirname(safepath),os.W_OK):
         raise PermissionError(f"{os.path.dirname(safepath)} is not a writable directory")
@@ -107,7 +111,7 @@ def readSafe(filename):
         raise FileNotFoundError(f"\"{filename}\" is not a valid file name or does not exist")
 
 
-def writeSafe(filename):
+def writeSafe(filename,overwrite=False):
     '''
     Checks that a filename is safe to write to, or supplies one
 
@@ -122,7 +126,7 @@ def writeSafe(filename):
     filename = os.path.abspath(filename) 
     # If output file name already exists, choose a backup so as not to overwrite
     if checkExists(filename):
-        filename = getSafePath(filename)
+        filename = getSafePath(filename,overwrite)
     # Check for write permissions in output directory
     elif not os.access((os.path.dirname(filename)),os.W_OK):
         raise PermissionError(f"{os.path.dirname(filename)} is not a writable directory")
@@ -151,7 +155,7 @@ def fileIn(readfile="",ext=""):
         return readSafe(appendExt(filename,ext))
 
 
-def fileOut(writefile="",ext=""):
+def fileOut(writefile="",ext="",overwrite=False):
     '''
     This function interactively asks for an output file name and does some sanity checks.
     
@@ -168,9 +172,9 @@ def fileOut(writefile="",ext=""):
     if not bool(filename):
         filename = input("Enter name of or path to the file to write > ")
     # validate and return path while appending extension
-    return writeSafe(appendExt(filename,ext))
+    return writeSafe(appendExt(filename,ext),overwrite)
 
-def fileIO(readfile="",writefile="",readext="",writeext=""):
+def fileIO(readfile="",writefile=None,readext="",writeext="",overwrite=False):
     '''
     This function interactively asks for an input file name, an output file name, and does some sanity checks.
     It comes with several optional arguments, allowing it simply to check for the validity of given file names instead of asking for new ones.
@@ -184,10 +188,13 @@ def fileIO(readfile="",writefile="",readext="",writeext=""):
         Tuple of strings: (input_file_path,output_file_path) : these are absolute paths as this may be helpful
     '''
 
-    return (fileIn(readfile,readext),fileOut(writefile,writeext))
+    # support autocompletion of output file name given input name
+    if writefile == None:
+        writefile = readfile
+    return (fileIn(readfile,readext),fileOut(writefile,writeext,overwrite))
 
 
-def fileOperate(function,newlines=True,readfile="",writefile="",readext="",writeext="",readmode="r",writemode="w",*args,**kwargs):
+def fileOperate(function,readfile="",writefile=None,readext="",writeext="",readmode="r",writemode="w",overwrite=False,*args,**kwargs):
     '''
     Accepts a function and input/output files, and applies the function to the input, writing the results to the output
     
@@ -207,11 +214,26 @@ def fileOperate(function,newlines=True,readfile="",writefile="",readext="",write
         None, though it will write a new file according to "writefile"
     '''
 
-    readfile,writefile = fileIO(readfile,writefile,readext,writeext)
+    readfile,writefile = fileIO(readfile,writefile,readext,writeext,overwrite)
+    
+    data = open(readfile,readmode).read()
+
+    output = function(data,*args,**kwargs)
+    assert type(output) == str
+
+    open(writefile,writemode).write(output)
+
+    return
+
+
+def fileOperateList(function,readfile="",writefile="",readext="",writeext="",readmode="r",writemode="w",overwrite=False,*args,**kwargs):
+    '''
+    Same as fileOperate but calls the readlines() and writelines() methods, so the function here has to expect a list-of-lines input and return one
+    '''
+
+    readfile,writefile = fileIO(readfile,writefile,readext,writeext,overwrite)
     
     data = open(readfile,readmode).readlines()
-    if not newlines:
-        data = [e.rstrip() for e in data]
 
     output = function(data,*args,**kwargs)
     assert type(output) == list
@@ -220,6 +242,13 @@ def fileOperate(function,newlines=True,readfile="",writefile="",readext="",write
 
     return
 
+
+def fileOperateGenerator(function,readfile="",writefile="",readext="",writeext="",readmode="r",writemode="w",overwrite=False,*args,**kwargs):
+    '''
+    Same as fileOperate but gives the lines to the function as a generator object and returns a generator object (or string or list?)
+    Still needs to be implemented
+    '''
+    pass
 
 # Begin module test
 if __name__ == "__main__":
