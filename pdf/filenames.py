@@ -5,7 +5,7 @@
 # It is a wrapper for the builtin os module to make file reading
 # and writing easy and reliable
 # Written by Lorenzo Van Muñoz
-# Last Updated Dec 17 2020
+# Last Updated Dec 21 2020
 
 # Features safe writing to file by modifying file name,
 # verifies readability/writability for requested paths,

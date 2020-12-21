@@ -3,7 +3,7 @@
 # interleave.py
 # A script to automatic interleave lines between blocks in a text file
 # Written by Lorenzo Van Muñoz
-# Last Updated Dec 17 2020
+# Last Updated Dec 21 2020
 
 import argparse , filenames
 
@@ -21,14 +21,17 @@ def interleave(lines):
     # identify numerical lines representing page numbers
     num_indices = []
     entry_indices = []
-    for i,e in enumerate(lines):
-        # ensure no empty lines
+    output_index = 0
+    lines = [e.rstrip() for e in lines]   
+    for e in lines:
+        # if there is an empty line, skip it, reducing the total number of lines in the output by 1 
         if not bool(e):
-            raise ValueError("Input file contains empty lines not allowed")
-        if e.isdigit():
-            num_indices.append(i)
+            continue
+        elif e.isdigit():
+            num_indices.append(output_index)
         else:
-            entry_indices.append(i)
+            entry_indices.append(output_index)
+        output_index += 1
 
     output = []
     # perform the permutations (entries alternate with numbers)
@@ -41,7 +44,7 @@ def interleave(lines):
     return output
 
 
-def main():
+def cli():
     '''
     This handles the input and output and command line arguments for interleaving.py
     '''
@@ -59,8 +62,7 @@ def main():
 
     print("interleave.py - a script to interleave lines\n")
 
-    filenames.fileOperate(interleave,   \
-        newlines=False,  \
+    filenames.fileOperateList(interleave,   \
         readfile=args.input, writefile=args.output,   \
         readext=".txt",writeext=".txt")
     
@@ -68,5 +70,5 @@ def main():
     return
 
 if __name__ == "__main__":
-    main()
+    cli()
     raise SystemExit
