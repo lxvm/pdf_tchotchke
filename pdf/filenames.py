@@ -243,12 +243,20 @@ def fileOperateList(function,readfile="",writefile="",readext="",writeext="",rea
     return
 
 
-def fileOperateGenerator(function,readfile="",writefile="",readext="",writeext="",readmode="r",writemode="w",overwrite=False,*args,**kwargs):
+def fileOperateLine(function,readfile="",writefile="",readext="",writeext="",readmode="r",writemode="w",overwrite=False,*args,**kwargs):
     '''
-    Same as fileOperate but gives the lines to the function as a generator object and returns a generator object (or string or list?)
-    Still needs to be implemented
+    Same as fileOperate gives the file object to the function (intent here is to use f.readline() so the file never has to be loaded in alltogether) and returns an iterable with the contents to write to file (e.g list)
     '''
-    pass
+
+    readfile,writefile = fileIO(readfile,writefile,readext,writeext,overwrite)
+    
+    with open(readfile,readmode) as f:
+        output = function(f,*args,**kwargs)
+
+    open(writefile,writemode).writelines(output)
+    
+    return
+    
 
 # Begin module test
 if __name__ == "__main__":
