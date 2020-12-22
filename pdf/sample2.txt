@@ -2,7 +2,7 @@
 1
 1.1 The big picture: why is the Universe not boring?
 2
-1.2 Convection: a ﬁrst example of a nonequilibrium system
+1.2 Convection: a first example of a nonequilibrium system
 3
 1.3 Examples of nonequilibrium patterns and dynamics
 10
@@ -46,7 +46,7 @@
 70
 2.4.2 Taylor–Couette instability
 74
-2.5 Classiﬁcation for linear instabilities of a uniform state
+2.5 Classification for linear instabilities of a uniform state
 75
 2.5.1 Type-I instability
 77
@@ -138,7 +138,7 @@
 187
 5.2.2 Nonpotential models
 188
-5.2.3 Models with mean ﬂow
+5.2.3 Models with mean flow
 188
 5.2.4 Model for rotating convection
 190
@@ -220,7 +220,7 @@
 256
 7.3.2 Competition between stripes and lattices
 261
-7.3.3 Hexagons in the absence of ﬁeld-inversion symmetry
+7.3.3 Hexagons in the absence of field-inversion symmetry
 264
 7.3.4 Spatial variations
 269
@@ -312,9 +312,9 @@
 388
 10.4.1 Traveling and standing waves
 389
-10.4.2 Onset in ﬁnite geometries
+10.4.2 Onset in finite geometries
 390
-10.4.3 Nonlinear waves with reﬂecting boundaries
+10.4.3 Nonlinear waves with reflecting boundaries
 392
 10.5 Waves in a two-dimensional type-I-o system
 393
@@ -324,7 +324,7 @@
 396
 11 Excitable media
 401
-11.1 Nerve ﬁbers and heart muscle
+11.1 Nerve fibers and heart muscle
 404
 11.1.1 Hodgkin–Huxley model of action potentials
 404
@@ -362,11 +362,11 @@
 445
 12.1 Introduction
 445
-12.2 Discretization of ﬁelds and equations
+12.2 Discretization of fields and equations
 447
-12.2.1 Finitely many operations on a ﬁnite amount of data
+12.2.1 Finitely many operations on a finite amount of data
 447
-12.2.2 The discretization of continuous ﬁelds
+12.2.2 The discretization of continuous fields
 449
 12.2.3 The discretization of equations
 451

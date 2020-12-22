@@ -1,9 +1,6 @@
-0 "Cover" 1
-0 "Contents" 8
-0 "Preface" 14
 0 "1 Introduction" 18
 1 "1.1 The big picture: why is the Universe not boring?" 19
-1 "1.2 Convection: a ﬁrst example of a nonequilibrium system" 20
+1 "1.2 Convection: a first example of a nonequilibrium system" 20
 1 "1.3 Examples of nonequilibrium patterns and dynamics" 27
 2 "1.3.1 Natural patterns" 27
 2 "1.3.2 Prepared patterns" 37
@@ -25,7 +22,7 @@
 1 "2.4 Experimental investigations of linear stability" 87
 2 "2.4.1 General remarks" 87
 2 "2.4.2 Taylor–Couette instability" 91
-1 "2.5 Classiﬁcation for linear instabilities of a uniform state" 92
+1 "2.5 Classification for linear instabilities of a uniform state" 92
 2 "2.5.1 Type-I instability" 94
 2 "2.5.2 Type-II instability" 96
 2 "2.5.3 Type-III instability" 97
@@ -71,7 +68,7 @@
 1 "5.2 Generalized Swift–Hohenberg models" 204
 2 "5.2.1 Non-symmetric model" 204
 2 "5.2.2 Nonpotential models" 205
-2 "5.2.3 Models with mean ﬂow" 205
+2 "5.2.3 Models with mean flow" 205
 2 "5.2.4 Model for rotating convection" 207
 2 "5.2.5 Model for quasicrystalline patterns" 209
 1 "5.3 Order-parameter equations" 209
@@ -112,7 +109,7 @@
 1 "7.3 Superimposed stripes" 272
 2 "7.3.1 Amplitude equations" 273
 2 "7.3.2 Competition between stripes and lattices" 278
-2 "7.3.3 Hexagons in the absence of ﬁeld-inversion symmetry" 281
+2 "7.3.3 Hexagons in the absence of field-inversion symmetry" 281
 2 "7.3.4 Spatial variations" 286
 2 "7.3.5 Cross-stripe instability" 287
 1 "7.4 Conclusions" 289
@@ -158,13 +155,13 @@
 2 "10.3.5 Local modes" 403
 1 "10.4 Bidirectional waves in a type-I-o system" 405
 2 "10.4.1 Traveling and standing waves" 406
-2 "10.4.2 Onset in ﬁnite geometries" 407
-2 "10.4.3 Nonlinear waves with reﬂecting boundaries" 409
+2 "10.4.2 Onset in finite geometries" 407
+2 "10.4.3 Nonlinear waves with reflecting boundaries" 409
 1 "10.5 Waves in a two-dimensional type-I-o system" 410
 1 "10.6 Conclusions" 412
 1 "10.7 Further reading" 413
 0 "11 Excitable media" 418
-1 "11.1 Nerve ﬁbers and heart muscle" 421
+1 "11.1 Nerve fibers and heart muscle" 421
 2 "11.1.1 Hodgkin–Huxley model of action potentials" 421
 2 "11.1.2 Models of electrical signaling in the heart" 428
 2 "11.1.3 FitzHugh–Nagumo model" 430
@@ -183,9 +180,9 @@
 1 "11.7 Further reading" 458
 0 "12 Numerical methods" 462
 1 "12.1 Introduction" 462
-1 "12.2 Discretization of ﬁelds and equations" 464
-2 "12.2.1 Finitely many operations on a ﬁnite amount of data" 464
-2 "12.2.2 The discretization of continuous ﬁelds" 466
+1 "12.2 Discretization of fields and equations" 464
+2 "12.2.1 Finitely many operations on a finite amount of data" 464
+2 "12.2.2 The discretization of continuous fields" 466
 2 "12.2.3 The discretization of equations" 468
 1 "12.3 Time integration methods for pattern-forming systems" 474
 2 "12.3.1 Overview" 474
@@ -203,4 +200,3 @@
 0 "Glossary" 537
 0 "References" 543
 0 "Index" 548
-0 "Back Cover" 553

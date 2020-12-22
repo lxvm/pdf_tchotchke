@@ -1,0 +1,824 @@
+BookmarkBegin
+BookmarkTitle: Cover
+BookmarkLevel: 1
+BookmarkPageNumber: 1
+BookmarkBegin
+BookmarkTitle: Contents
+BookmarkLevel: 1
+BookmarkPageNumber: 8
+BookmarkBegin
+BookmarkTitle: Preface
+BookmarkLevel: 1
+BookmarkPageNumber: 14
+BookmarkBegin
+BookmarkTitle: 1 Introduction
+BookmarkLevel: 1
+BookmarkPageNumber: 18
+BookmarkBegin
+BookmarkTitle: 1.1 The big picture: why is the Universe not boring?
+BookmarkLevel: 2
+BookmarkPageNumber: 19
+BookmarkBegin
+BookmarkTitle: 1.2 Convection: a first example of a nonequilibrium system
+BookmarkLevel: 2
+BookmarkPageNumber: 20
+BookmarkBegin
+BookmarkTitle: 1.3 Examples of nonequilibrium patterns and dynamics
+BookmarkLevel: 2
+BookmarkPageNumber: 27
+BookmarkBegin
+BookmarkTitle: 1.3.1 Natural patterns
+BookmarkLevel: 3
+BookmarkPageNumber: 27
+BookmarkBegin
+BookmarkTitle: 1.3.2 Prepared patterns
+BookmarkLevel: 3
+BookmarkPageNumber: 37
+BookmarkBegin
+BookmarkTitle: 1.3.3 What are the interesting questions?
+BookmarkLevel: 3
+BookmarkPageNumber: 52
+BookmarkBegin
+BookmarkTitle: 1.4 New features of pattern-forming systems
+BookmarkLevel: 2
+BookmarkPageNumber: 55
+BookmarkBegin
+BookmarkTitle: 1.4.1 Conceptual differences
+BookmarkLevel: 3
+BookmarkPageNumber: 55
+BookmarkBegin
+BookmarkTitle: 1.4.2 New properties
+BookmarkLevel: 3
+BookmarkPageNumber: 60
+BookmarkBegin
+BookmarkTitle: 1.5 A strategy for studying pattern-forming nonequilibrium systems
+BookmarkLevel: 2
+BookmarkPageNumber: 61
+BookmarkBegin
+BookmarkTitle: 1.6 Nonequilibrium systems not discussed in this book
+BookmarkLevel: 2
+BookmarkPageNumber: 65
+BookmarkBegin
+BookmarkTitle: 1.7 Conclusion
+BookmarkLevel: 2
+BookmarkPageNumber: 66
+BookmarkBegin
+BookmarkTitle: 1.8 Further reading
+BookmarkLevel: 2
+BookmarkPageNumber: 67
+BookmarkBegin
+BookmarkTitle: 2 Linear instability: basics
+BookmarkLevel: 1
+BookmarkPageNumber: 73
+BookmarkBegin
+BookmarkTitle: 2.1 Conceptual framework for a linear stability analysis
+BookmarkLevel: 2
+BookmarkPageNumber: 74
+BookmarkBegin
+BookmarkTitle: 2.2 Linear stability analysis of a pattern-forming system
+BookmarkLevel: 2
+BookmarkPageNumber: 80
+BookmarkBegin
+BookmarkTitle: 2.2.1 One-dimensional Swift–Hohenberg equation
+BookmarkLevel: 3
+BookmarkPageNumber: 80
+BookmarkBegin
+BookmarkTitle: 2.2.2 Linear stability analysis
+BookmarkLevel: 3
+BookmarkPageNumber: 81
+BookmarkBegin
+BookmarkTitle: 2.2.3 Growth rates and instability diagram
+BookmarkLevel: 3
+BookmarkPageNumber: 84
+BookmarkBegin
+BookmarkTitle: 2.3 Key steps of a linear stability analysis
+BookmarkLevel: 2
+BookmarkPageNumber: 86
+BookmarkBegin
+BookmarkTitle: 2.4 Experimental investigations of linear stability
+BookmarkLevel: 2
+BookmarkPageNumber: 87
+BookmarkBegin
+BookmarkTitle: 2.4.1 General remarks
+BookmarkLevel: 3
+BookmarkPageNumber: 87
+BookmarkBegin
+BookmarkTitle: 2.4.2 Taylor–Couette instability
+BookmarkLevel: 3
+BookmarkPageNumber: 91
+BookmarkBegin
+BookmarkTitle: 2.5 Classification for linear instabilities of a uniform state
+BookmarkLevel: 2
+BookmarkPageNumber: 92
+BookmarkBegin
+BookmarkTitle: 2.5.1 Type-I instability
+BookmarkLevel: 3
+BookmarkPageNumber: 94
+BookmarkBegin
+BookmarkTitle: 2.5.2 Type-II instability
+BookmarkLevel: 3
+BookmarkPageNumber: 96
+BookmarkBegin
+BookmarkTitle: 2.5.3 Type-III instability
+BookmarkLevel: 3
+BookmarkPageNumber: 97
+BookmarkBegin
+BookmarkTitle: 2.6 Role of symmetry in a linear stability analysis
+BookmarkLevel: 2
+BookmarkPageNumber: 98
+BookmarkBegin
+BookmarkTitle: 2.6.1 Rotationally invariant systems
+BookmarkLevel: 3
+BookmarkPageNumber: 99
+BookmarkBegin
+BookmarkTitle: 2.6.2 Uniaxial systems
+BookmarkLevel: 3
+BookmarkPageNumber: 101
+BookmarkBegin
+BookmarkTitle: 2.6.3 Anisotropic systems
+BookmarkLevel: 3
+BookmarkPageNumber: 103
+BookmarkBegin
+BookmarkTitle: 2.6.4 Formal discussion
+BookmarkLevel: 3
+BookmarkPageNumber: 103
+BookmarkBegin
+BookmarkTitle: 2.7 Conclusions
+BookmarkLevel: 2
+BookmarkPageNumber: 105
+BookmarkBegin
+BookmarkTitle: 2.8 Further reading
+BookmarkLevel: 2
+BookmarkPageNumber: 105
+BookmarkBegin
+BookmarkTitle: 3 Linear instability: applications
+BookmarkLevel: 1
+BookmarkPageNumber: 113
+BookmarkBegin
+BookmarkTitle: 3.1 Turing instability
+BookmarkLevel: 2
+BookmarkPageNumber: 113
+BookmarkBegin
+BookmarkTitle: 3.1.1 Reaction–diffusion equations
+BookmarkLevel: 3
+BookmarkPageNumber: 114
+BookmarkBegin
+BookmarkTitle: 3.1.2 Linear stability analysis
+BookmarkLevel: 3
+BookmarkPageNumber: 116
+BookmarkBegin
+BookmarkTitle: 3.1.3 Oscillatory instability
+BookmarkLevel: 3
+BookmarkPageNumber: 125
+BookmarkBegin
+BookmarkTitle: 3.2 Realistic chemical systems
+BookmarkLevel: 2
+BookmarkPageNumber: 126
+BookmarkBegin
+BookmarkTitle: 3.2.1 Experimental apparatus
+BookmarkLevel: 3
+BookmarkPageNumber: 126
+BookmarkBegin
+BookmarkTitle: 3.2.2 Evolution equations
+BookmarkLevel: 3
+BookmarkPageNumber: 127
+BookmarkBegin
+BookmarkTitle: 3.2.3 Experimental results
+BookmarkLevel: 3
+BookmarkPageNumber: 133
+BookmarkBegin
+BookmarkTitle: 3.3 Conclusions
+BookmarkLevel: 2
+BookmarkPageNumber: 136
+BookmarkBegin
+BookmarkTitle: 3.4 Further reading
+BookmarkLevel: 2
+BookmarkPageNumber: 137
+BookmarkBegin
+BookmarkTitle: 4 Nonlinear states
+BookmarkLevel: 1
+BookmarkPageNumber: 143
+BookmarkBegin
+BookmarkTitle: 4.1 Nonlinear saturation
+BookmarkLevel: 2
+BookmarkPageNumber: 146
+BookmarkBegin
+BookmarkTitle: 4.1.1 Complex amplitude
+BookmarkLevel: 3
+BookmarkPageNumber: 147
+BookmarkBegin
+BookmarkTitle: 4.1.2 Bifurcation theory
+BookmarkLevel: 3
+BookmarkPageNumber: 151
+BookmarkBegin
+BookmarkTitle: 4.1.3 Nonlinear stripe state of the Swift–Hohenberg equation
+BookmarkLevel: 3
+BookmarkPageNumber: 154
+BookmarkBegin
+BookmarkTitle: 4.2 Stability balloons
+BookmarkLevel: 2
+BookmarkPageNumber: 156
+BookmarkBegin
+BookmarkTitle: 4.2.1 General discussion
+BookmarkLevel: 3
+BookmarkPageNumber: 156
+BookmarkBegin
+BookmarkTitle: 4.2.2 Busse balloon for Rayleigh–Bénard convection
+BookmarkLevel: 3
+BookmarkPageNumber: 164
+BookmarkBegin
+BookmarkTitle: 4.3 Two-dimensional lattice states
+BookmarkLevel: 2
+BookmarkPageNumber: 169
+BookmarkBegin
+BookmarkTitle: 4.4 Non-ideal states
+BookmarkLevel: 2
+BookmarkPageNumber: 175
+BookmarkBegin
+BookmarkTitle: 4.4.1 Realistic patterns
+BookmarkLevel: 3
+BookmarkPageNumber: 175
+BookmarkBegin
+BookmarkTitle: 4.4.2 Topological defects
+BookmarkLevel: 3
+BookmarkPageNumber: 177
+BookmarkBegin
+BookmarkTitle: 4.4.3 Dynamics of defects
+BookmarkLevel: 3
+BookmarkPageNumber: 181
+BookmarkBegin
+BookmarkTitle: 4.5 Conclusions
+BookmarkLevel: 2
+BookmarkPageNumber: 182
+BookmarkBegin
+BookmarkTitle: 4.6 Further reading
+BookmarkLevel: 2
+BookmarkPageNumber: 183
+BookmarkBegin
+BookmarkTitle: 5 Models
+BookmarkLevel: 1
+BookmarkPageNumber: 190
+BookmarkBegin
+BookmarkTitle: 5.1 Swift–Hohenberg model
+BookmarkLevel: 2
+BookmarkPageNumber: 192
+BookmarkBegin
+BookmarkTitle: 5.1.1 Heuristic derivation
+BookmarkLevel: 3
+BookmarkPageNumber: 193
+BookmarkBegin
+BookmarkTitle: 5.1.2 Properties
+BookmarkLevel: 3
+BookmarkPageNumber: 196
+BookmarkBegin
+BookmarkTitle: 5.1.3 Numerical simulations
+BookmarkLevel: 3
+BookmarkPageNumber: 200
+BookmarkBegin
+BookmarkTitle: 5.1.4 Comparison with experimental systems
+BookmarkLevel: 3
+BookmarkPageNumber: 202
+BookmarkBegin
+BookmarkTitle: 5.2 Generalized Swift–Hohenberg models
+BookmarkLevel: 2
+BookmarkPageNumber: 204
+BookmarkBegin
+BookmarkTitle: 5.2.1 Non-symmetric model
+BookmarkLevel: 3
+BookmarkPageNumber: 204
+BookmarkBegin
+BookmarkTitle: 5.2.2 Nonpotential models
+BookmarkLevel: 3
+BookmarkPageNumber: 205
+BookmarkBegin
+BookmarkTitle: 5.2.3 Models with mean flow
+BookmarkLevel: 3
+BookmarkPageNumber: 205
+BookmarkBegin
+BookmarkTitle: 5.2.4 Model for rotating convection
+BookmarkLevel: 3
+BookmarkPageNumber: 207
+BookmarkBegin
+BookmarkTitle: 5.2.5 Model for quasicrystalline patterns
+BookmarkLevel: 3
+BookmarkPageNumber: 209
+BookmarkBegin
+BookmarkTitle: 5.3 Order-parameter equations
+BookmarkLevel: 2
+BookmarkPageNumber: 209
+BookmarkBegin
+BookmarkTitle: 5.4 Complex Ginzburg–Landau equation
+BookmarkLevel: 2
+BookmarkPageNumber: 213
+BookmarkBegin
+BookmarkTitle: 5.5 Kuramoto–Sivashinsky equation
+BookmarkLevel: 2
+BookmarkPageNumber: 214
+BookmarkBegin
+BookmarkTitle: 5.6 Reaction–diffusion models
+BookmarkLevel: 2
+BookmarkPageNumber: 216
+BookmarkBegin
+BookmarkTitle: 5.7 Models that are discrete in space, time, or value
+BookmarkLevel: 2
+BookmarkPageNumber: 218
+BookmarkBegin
+BookmarkTitle: 5.8 Conclusions
+BookmarkLevel: 2
+BookmarkPageNumber: 218
+BookmarkBegin
+BookmarkTitle: 5.9 Further reading
+BookmarkLevel: 2
+BookmarkPageNumber: 219
+BookmarkBegin
+BookmarkTitle: 6 One-dimensional amplitude equation
+BookmarkLevel: 1
+BookmarkPageNumber: 225
+BookmarkBegin
+BookmarkTitle: 6.1 Origin and meaning of the amplitude
+BookmarkLevel: 2
+BookmarkPageNumber: 228
+BookmarkBegin
+BookmarkTitle: 6.2 Derivation of the amplitude equation
+BookmarkLevel: 2
+BookmarkPageNumber: 231
+BookmarkBegin
+BookmarkTitle: 6.2.1 Phenomenological derivation
+BookmarkLevel: 3
+BookmarkPageNumber: 231
+BookmarkBegin
+BookmarkTitle: 6.2.2 Deduction of the amplitude-equation parameters
+BookmarkLevel: 3
+BookmarkPageNumber: 234
+BookmarkBegin
+BookmarkTitle: 6.2.3 Method of multiple scales
+BookmarkLevel: 3
+BookmarkPageNumber: 235
+BookmarkBegin
+BookmarkTitle: 6.2.4 Boundary conditions for the amplitude equation
+BookmarkLevel: 3
+BookmarkPageNumber: 236
+BookmarkBegin
+BookmarkTitle: 6.3 Properties of the amplitude equation
+BookmarkLevel: 2
+BookmarkPageNumber: 238
+BookmarkBegin
+BookmarkTitle: 6.3.1 Universality and scales
+BookmarkLevel: 3
+BookmarkPageNumber: 238
+BookmarkBegin
+BookmarkTitle: 6.3.2 Potential dynamics
+BookmarkLevel: 3
+BookmarkPageNumber: 241
+BookmarkBegin
+BookmarkTitle: 6.4 Applications of the amplitude equation
+BookmarkLevel: 2
+BookmarkPageNumber: 243
+BookmarkBegin
+BookmarkTitle: 6.4.1 Lateral boundaries
+BookmarkLevel: 3
+BookmarkPageNumber: 243
+BookmarkBegin
+BookmarkTitle: 6.4.2 Eckhaus instability
+BookmarkLevel: 3
+BookmarkPageNumber: 247
+BookmarkBegin
+BookmarkTitle: 6.4.3 Phase dynamics
+BookmarkLevel: 3
+BookmarkPageNumber: 251
+BookmarkBegin
+BookmarkTitle: 6.5 Limitations of the amplitude-equation formalism
+BookmarkLevel: 2
+BookmarkPageNumber: 254
+BookmarkBegin
+BookmarkTitle: 6.6 Conclusions
+BookmarkLevel: 2
+BookmarkPageNumber: 255
+BookmarkBegin
+BookmarkTitle: 6.7 Further reading
+BookmarkLevel: 2
+BookmarkPageNumber: 256
+BookmarkBegin
+BookmarkTitle: 7 Amplitude equations for two-dimensional patterns
+BookmarkLevel: 1
+BookmarkPageNumber: 261
+BookmarkBegin
+BookmarkTitle: 7.1 Stripes in rotationally invariant systems
+BookmarkLevel: 2
+BookmarkPageNumber: 263
+BookmarkBegin
+BookmarkTitle: 7.1.1 Amplitude equation
+BookmarkLevel: 3
+BookmarkPageNumber: 263
+BookmarkBegin
+BookmarkTitle: 7.1.2 Boundary conditions
+BookmarkLevel: 3
+BookmarkPageNumber: 265
+BookmarkBegin
+BookmarkTitle: 7.1.3 Potential
+BookmarkLevel: 3
+BookmarkPageNumber: 266
+BookmarkBegin
+BookmarkTitle: 7.1.4 Stability balloon
+BookmarkLevel: 3
+BookmarkPageNumber: 267
+BookmarkBegin
+BookmarkTitle: 7.1.5 Phase dynamics
+BookmarkLevel: 3
+BookmarkPageNumber: 269
+BookmarkBegin
+BookmarkTitle: 7.2 Stripes in anisotropic systems
+BookmarkLevel: 2
+BookmarkPageNumber: 270
+BookmarkBegin
+BookmarkTitle: 7.2.1 Amplitude equation
+BookmarkLevel: 3
+BookmarkPageNumber: 270
+BookmarkBegin
+BookmarkTitle: 7.2.2 Stability balloon
+BookmarkLevel: 3
+BookmarkPageNumber: 271
+BookmarkBegin
+BookmarkTitle: 7.2.3 Phase dynamics
+BookmarkLevel: 3
+BookmarkPageNumber: 272
+BookmarkBegin
+BookmarkTitle: 7.3 Superimposed stripes
+BookmarkLevel: 2
+BookmarkPageNumber: 272
+BookmarkBegin
+BookmarkTitle: 7.3.1 Amplitude equations
+BookmarkLevel: 3
+BookmarkPageNumber: 273
+BookmarkBegin
+BookmarkTitle: 7.3.2 Competition between stripes and lattices
+BookmarkLevel: 3
+BookmarkPageNumber: 278
+BookmarkBegin
+BookmarkTitle: 7.3.3 Hexagons in the absence of field-inversion symmetry
+BookmarkLevel: 3
+BookmarkPageNumber: 281
+BookmarkBegin
+BookmarkTitle: 7.3.4 Spatial variations
+BookmarkLevel: 3
+BookmarkPageNumber: 286
+BookmarkBegin
+BookmarkTitle: 7.3.5 Cross-stripe instability
+BookmarkLevel: 3
+BookmarkPageNumber: 287
+BookmarkBegin
+BookmarkTitle: 7.4 Conclusions
+BookmarkLevel: 2
+BookmarkPageNumber: 289
+BookmarkBegin
+BookmarkTitle: 7.5 Further reading
+BookmarkLevel: 2
+BookmarkPageNumber: 290
+BookmarkBegin
+BookmarkTitle: 8 Defects and fronts
+BookmarkLevel: 1
+BookmarkPageNumber: 296
+BookmarkBegin
+BookmarkTitle: 8.1 Dislocations
+BookmarkLevel: 2
+BookmarkPageNumber: 298
+BookmarkBegin
+BookmarkTitle: 8.1.1 Stationary dislocation
+BookmarkLevel: 3
+BookmarkPageNumber: 300
+BookmarkBegin
+BookmarkTitle: 8.1.2 Dislocation dynamics
+BookmarkLevel: 3
+BookmarkPageNumber: 302
+BookmarkBegin
+BookmarkTitle: 8.1.3 Interaction of dislocations
+BookmarkLevel: 3
+BookmarkPageNumber: 306
+BookmarkBegin
+BookmarkTitle: 8.2 Grain boundaries
+BookmarkLevel: 2
+BookmarkPageNumber: 307
+BookmarkBegin
+BookmarkTitle: 8.3 Fronts
+BookmarkLevel: 2
+BookmarkPageNumber: 313
+BookmarkBegin
+BookmarkTitle: 8.3.1 Existence of front solutions
+BookmarkLevel: 3
+BookmarkPageNumber: 313
+BookmarkBegin
+BookmarkTitle: 8.3.2 Front selection
+BookmarkLevel: 3
+BookmarkPageNumber: 320
+BookmarkBegin
+BookmarkTitle: 8.3.3 Wave-number selection
+BookmarkLevel: 3
+BookmarkPageNumber: 324
+BookmarkBegin
+BookmarkTitle: 8.4 Conclusions
+BookmarkLevel: 2
+BookmarkPageNumber: 326
+BookmarkBegin
+BookmarkTitle: 8.5 Further reading
+BookmarkLevel: 2
+BookmarkPageNumber: 326
+BookmarkBegin
+BookmarkTitle: 9 Patterns far from threshold
+BookmarkLevel: 1
+BookmarkPageNumber: 332
+BookmarkBegin
+BookmarkTitle: 9.1 Stripe and lattice states
+BookmarkLevel: 2
+BookmarkPageNumber: 334
+BookmarkBegin
+BookmarkTitle: 9.1.1 Goldstone modes and phase dynamics
+BookmarkLevel: 3
+BookmarkPageNumber: 335
+BookmarkBegin
+BookmarkTitle: 9.1.2 Phase diffusion equation
+BookmarkLevel: 3
+BookmarkPageNumber: 337
+BookmarkBegin
+BookmarkTitle: 9.1.3 Beyond the phase equation
+BookmarkLevel: 3
+BookmarkPageNumber: 344
+BookmarkBegin
+BookmarkTitle: 9.1.4 Wave-number selection
+BookmarkLevel: 3
+BookmarkPageNumber: 348
+BookmarkBegin
+BookmarkTitle: 9.2 Novel patterns
+BookmarkLevel: 2
+BookmarkPageNumber: 354
+BookmarkBegin
+BookmarkTitle: 9.2.1 Pinning and disorder
+BookmarkLevel: 3
+BookmarkPageNumber: 355
+BookmarkBegin
+BookmarkTitle: 9.2.2 Localized structures
+BookmarkLevel: 3
+BookmarkPageNumber: 357
+BookmarkBegin
+BookmarkTitle: 9.2.3 Patterns based on front properties
+BookmarkLevel: 3
+BookmarkPageNumber: 359
+BookmarkBegin
+BookmarkTitle: 9.2.4 Spatiotemporal chaos
+BookmarkLevel: 3
+BookmarkPageNumber: 362
+BookmarkBegin
+BookmarkTitle: 9.3 Conclusions
+BookmarkLevel: 2
+BookmarkPageNumber: 369
+BookmarkBegin
+BookmarkTitle: 9.4 Further reading
+BookmarkLevel: 2
+BookmarkPageNumber: 370
+BookmarkBegin
+BookmarkTitle: 10 Oscillatory patterns
+BookmarkLevel: 1
+BookmarkPageNumber: 375
+BookmarkBegin
+BookmarkTitle: 10.1 Convective and absolute instability
+BookmarkLevel: 2
+BookmarkPageNumber: 377
+BookmarkBegin
+BookmarkTitle: 10.2 States arising from a type-III-o instability
+BookmarkLevel: 2
+BookmarkPageNumber: 380
+BookmarkBegin
+BookmarkTitle: 10.2.1 Phenomenology
+BookmarkLevel: 3
+BookmarkPageNumber: 380
+BookmarkBegin
+BookmarkTitle: 10.2.2 Amplitude equation
+BookmarkLevel: 3
+BookmarkPageNumber: 382
+BookmarkBegin
+BookmarkTitle: 10.2.3 Phase equation
+BookmarkLevel: 3
+BookmarkPageNumber: 385
+BookmarkBegin
+BookmarkTitle: 10.2.4 Stability balloon
+BookmarkLevel: 3
+BookmarkPageNumber: 387
+BookmarkBegin
+BookmarkTitle: 10.2.5 Defects: sources, sinks, shocks, and spirals
+BookmarkLevel: 3
+BookmarkPageNumber: 389
+BookmarkBegin
+BookmarkTitle: 10.3 Unidirectional waves in a type-I-o system
+BookmarkLevel: 2
+BookmarkPageNumber: 396
+BookmarkBegin
+BookmarkTitle: 10.3.1 Amplitude equation
+BookmarkLevel: 3
+BookmarkPageNumber: 397
+BookmarkBegin
+BookmarkTitle: 10.3.2 Criterion for absolute instability
+BookmarkLevel: 3
+BookmarkPageNumber: 399
+BookmarkBegin
+BookmarkTitle: 10.3.3 Absorbing boundaries
+BookmarkLevel: 3
+BookmarkPageNumber: 400
+BookmarkBegin
+BookmarkTitle: 10.3.4 Noise-sustained structures
+BookmarkLevel: 3
+BookmarkPageNumber: 401
+BookmarkBegin
+BookmarkTitle: 10.3.5 Local modes
+BookmarkLevel: 3
+BookmarkPageNumber: 403
+BookmarkBegin
+BookmarkTitle: 10.4 Bidirectional waves in a type-I-o system
+BookmarkLevel: 2
+BookmarkPageNumber: 405
+BookmarkBegin
+BookmarkTitle: 10.4.1 Traveling and standing waves
+BookmarkLevel: 3
+BookmarkPageNumber: 406
+BookmarkBegin
+BookmarkTitle: 10.4.2 Onset in finite geometries
+BookmarkLevel: 3
+BookmarkPageNumber: 407
+BookmarkBegin
+BookmarkTitle: 10.4.3 Nonlinear waves with reflecting boundaries
+BookmarkLevel: 3
+BookmarkPageNumber: 409
+BookmarkBegin
+BookmarkTitle: 10.5 Waves in a two-dimensional type-I-o system
+BookmarkLevel: 2
+BookmarkPageNumber: 410
+BookmarkBegin
+BookmarkTitle: 10.6 Conclusions
+BookmarkLevel: 2
+BookmarkPageNumber: 412
+BookmarkBegin
+BookmarkTitle: 10.7 Further reading
+BookmarkLevel: 2
+BookmarkPageNumber: 413
+BookmarkBegin
+BookmarkTitle: 11 Excitable media
+BookmarkLevel: 1
+BookmarkPageNumber: 418
+BookmarkBegin
+BookmarkTitle: 11.1 Nerve fibers and heart muscle
+BookmarkLevel: 2
+BookmarkPageNumber: 421
+BookmarkBegin
+BookmarkTitle: 11.1.1 Hodgkin–Huxley model of action potentials
+BookmarkLevel: 3
+BookmarkPageNumber: 421
+BookmarkBegin
+BookmarkTitle: 11.1.2 Models of electrical signaling in the heart
+BookmarkLevel: 3
+BookmarkPageNumber: 428
+BookmarkBegin
+BookmarkTitle: 11.1.3 FitzHugh–Nagumo model
+BookmarkLevel: 3
+BookmarkPageNumber: 430
+BookmarkBegin
+BookmarkTitle: 11.2 Oscillatory or excitable
+BookmarkLevel: 2
+BookmarkPageNumber: 433
+BookmarkBegin
+BookmarkTitle: 11.2.1 Relaxation oscillations
+BookmarkLevel: 3
+BookmarkPageNumber: 436
+BookmarkBegin
+BookmarkTitle: 11.2.2 Excitable dynamics
+BookmarkLevel: 3
+BookmarkPageNumber: 437
+BookmarkBegin
+BookmarkTitle: 11.3 Front propagation
+BookmarkLevel: 2
+BookmarkPageNumber: 438
+BookmarkBegin
+BookmarkTitle: 11.4 Pulses
+BookmarkLevel: 2
+BookmarkPageNumber: 441
+BookmarkBegin
+BookmarkTitle: 11.5 Waves
+BookmarkLevel: 2
+BookmarkPageNumber: 443
+BookmarkBegin
+BookmarkTitle: 11.6 Spirals
+BookmarkLevel: 2
+BookmarkPageNumber: 447
+BookmarkBegin
+BookmarkTitle: 11.6.1 Structure
+BookmarkLevel: 3
+BookmarkPageNumber: 447
+BookmarkBegin
+BookmarkTitle: 11.6.2 Formation
+BookmarkLevel: 3
+BookmarkPageNumber: 453
+BookmarkBegin
+BookmarkTitle: 11.6.3 Instabilities
+BookmarkLevel: 3
+BookmarkPageNumber: 454
+BookmarkBegin
+BookmarkTitle: 11.6.4 Three dimensions
+BookmarkLevel: 3
+BookmarkPageNumber: 456
+BookmarkBegin
+BookmarkTitle: 11.6.5 Application to heart arrhythmias
+BookmarkLevel: 3
+BookmarkPageNumber: 456
+BookmarkBegin
+BookmarkTitle: 11.7 Further reading
+BookmarkLevel: 2
+BookmarkPageNumber: 458
+BookmarkBegin
+BookmarkTitle: 12 Numerical methods
+BookmarkLevel: 1
+BookmarkPageNumber: 462
+BookmarkBegin
+BookmarkTitle: 12.1 Introduction
+BookmarkLevel: 2
+BookmarkPageNumber: 462
+BookmarkBegin
+BookmarkTitle: 12.2 Discretization of fields and equations
+BookmarkLevel: 2
+BookmarkPageNumber: 464
+BookmarkBegin
+BookmarkTitle: 12.2.1 Finitely many operations on a finite amount of data
+BookmarkLevel: 3
+BookmarkPageNumber: 464
+BookmarkBegin
+BookmarkTitle: 12.2.2 The discretization of continuous fields
+BookmarkLevel: 3
+BookmarkPageNumber: 466
+BookmarkBegin
+BookmarkTitle: 12.2.3 The discretization of equations
+BookmarkLevel: 3
+BookmarkPageNumber: 468
+BookmarkBegin
+BookmarkTitle: 12.3 Time integration methods for pattern-forming systems
+BookmarkLevel: 2
+BookmarkPageNumber: 474
+BookmarkBegin
+BookmarkTitle: 12.3.1 Overview
+BookmarkLevel: 3
+BookmarkPageNumber: 474
+BookmarkBegin
+BookmarkTitle: 12.3.2 Explicit methods
+BookmarkLevel: 3
+BookmarkPageNumber: 477
+BookmarkBegin
+BookmarkTitle: 12.3.3 Implicit methods
+BookmarkLevel: 3
+BookmarkPageNumber: 482
+BookmarkBegin
+BookmarkTitle: 12.3.4 Operator splitting
+BookmarkLevel: 3
+BookmarkPageNumber: 487
+BookmarkBegin
+BookmarkTitle: 12.3.5 How to choose the spatial and temporal resolutions
+BookmarkLevel: 3
+BookmarkPageNumber: 490
+BookmarkBegin
+BookmarkTitle: 12.4 Stationary states of a pattern-forming system
+BookmarkLevel: 2
+BookmarkPageNumber: 492
+BookmarkBegin
+BookmarkTitle: 12.4.1 Iterative methods
+BookmarkLevel: 3
+BookmarkPageNumber: 493
+BookmarkBegin
+BookmarkTitle: 12.4.2 Newton’s method
+BookmarkLevel: 3
+BookmarkPageNumber: 494
+BookmarkBegin
+BookmarkTitle: 12.5 Conclusion
+BookmarkLevel: 2
+BookmarkPageNumber: 499
+BookmarkBegin
+BookmarkTitle: 12.6 Further reading
+BookmarkLevel: 2
+BookmarkPageNumber: 502
+BookmarkBegin
+BookmarkTitle: Appendix 1 Elementary bifurcation theory
+BookmarkLevel: 1
+BookmarkPageNumber: 513
+BookmarkBegin
+BookmarkTitle: Appendix 2 Multiple-scales perturbation theory
+BookmarkLevel: 1
+BookmarkPageNumber: 520
+BookmarkBegin
+BookmarkTitle: Glossary
+BookmarkLevel: 1
+BookmarkPageNumber: 537
+BookmarkBegin
+BookmarkTitle: References
+BookmarkLevel: 1
+BookmarkPageNumber: 543
+BookmarkBegin
+BookmarkTitle: Index
+BookmarkLevel: 1
+BookmarkPageNumber: 548
+BookmarkBegin
+BookmarkTitle: Back Cover
+BookmarkLevel: 1
+BookmarkPageNumber: 553
