@@ -339,6 +339,27 @@ def cli():
     # Define command-line arguments
     parser = argparse.ArgumentParser(prog='bkmk.py',   \
             description='''a script to produce pdf bookmarks''')
+
+    subparsers = parser.add_subparsers(help='action!')
+    # Subparsers for each command
+    parser_convert = subparsers.add_parser("convert",   \
+            help="change a bookmark file syntax or renumber the pages")
+    parser_convert.set_defaults(func=convert)
+    # convert arguments
+    parser_convert.add_argument("-n","--number",default=0,type=int,    \
+            help="apply an offset to all page numbers")
+
+    parser_create = subparsers.add_parser("create", \
+            help="create bookmarks from a raw TOC file")
+    parser_create.set_defaults(func=create)
+    # create arguments
+    parser_create.add_argument("-p","--pattern",default="(?P<title>.+)\n(?P<page>\d+)",  \
+            help="regexp to read the input file containing (?P<page>\d+) and (?P<title>.+) groups")
+    parser_create.add_argument("-r","--re-flags", choices=list(RE_FLAGS),  \
+            help="optionally add a regexp flag to specify --pattern", default="U")
+    parser_create.add_argument("-e","--edit",  \
+            help="apply a regexp to the title, e.g. to removing leading numbers: r'^[\d\.]+\.'", default="")
+    
     # Main arguments
     parser.add_argument("syntax", choices=list(BKMK_SYNTAX),    \
             help="choose bookmark output format")
@@ -347,26 +368,6 @@ def cli():
     parser.add_argument("output",    \
             help="output file name")
 
-    subparsers = parser.add_subparsers(dest="subcommand", help='sub-commands')
-    # Subparsers for each command
-    parser_convert = subparsers.add_parser("convert",   \
-            help="use this command to change a bookmark file syntax or to renumber the pages")
-    parser_convert.set_defaults(func=convert)
-    # convert arguments
-    parser_convert.add_argument("-n","--number",default=0,type=int,    \
-            help="apply an offset to all page numbers")
-
-    parser_create = subparsers.add_parser("create", \
-            help="use this command to create bookmarks from a raw TOC file")
-    parser_create.set_defaults(func=create)
-    # create arguments
-    parser_create.add_argument("-p","--pattern",default="(?P<title>.+)\n(?P<page>\d+)",  \
-            help="regexp to read the input file containing (?P<page>\d+) and (?P<title>.+) groups")
-    parser_create.add_argument("-r","--re-flags", choices=list(RE_FLAGS),  \
-            help="optionally add a regexp flag to specify --pattern", default="U")
-    parser_create.add_argument("-e","--edit",  \
-            help="apply a regexp to the title. e.g. to removing leading numbers: r'^[\d\.]+\.'", default="")
-    
     args = parser.parse_args()  
 
     print("bkmk.py - a script to manipulate pdf bookmarks\n")
