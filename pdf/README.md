@@ -19,6 +19,7 @@ Though the code is documented with docstrings, this README is the main documenta
 ## Basic Usage
 
 ```
+$ bkmk.py -h
 usage: bkmk.py [-h] {convert,create} ... {cpdf,gs,pdftk} input output
 
 a script to produce pdf bookmarks
