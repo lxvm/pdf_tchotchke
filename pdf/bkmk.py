@@ -1,44 +1,72 @@
 #!/usr/bin/env python3
 
 # bkmk.py
-# A script to generate pdf bookmarks in cpdf syntax
+# A script to generate pdf bookmarks in cpdf,gs,pdftk syntaxes
 # Written by Lorenzo Van Muñoz
-# Last updated Dec 17 2020
+# Last updated Dec 21 2020
+'''
+This script uses the power of regular expressions to identify
+relevant bookmark information and to typeset the syntaxes.
+It also supports conversion between the different supported formats.
 
-# This script imports a txt file whose lines come in text and page number pairs.
-# It then places these pairs into an array.
-# A numbering adjustment is then made to the page numbers.
-# The index level of each bookmark entry is inferred using some simple rules.
-# Then the array is written to a txt file with the correct bookmark syntax.
-# Cpdf and Ghostscript/pdfmark and pdftk syntaxes are supported.
+Anyone is welcome to use it or improve upon it. Hopefully it makes
+the bookmark creation process easier for anyone needing to turn
+tables of contents into bookmarks, especially for large documents 
+such as textbooks.
 
-# Start with defintions
+Though it works as is, if it were to change in any way I would maybe
+create a syntax class with reading/writing methods as an alternative
+to the current dictionary bookmark system.
+
+In addition, the only other 'difficult' part about this script is to
+properly handle the detection of bookmark index/level and changing it 
+between the different formats. For example, cpdf and pdftk directly
+reference the current level of the entry, however gs/pdfmarks uses a
+hierarchical structure where each entry may have 'children'/subentries.
+Converting between these to has been implemented one way with while loops
+and the other way using recursion. Hopefully these are the only generic
+formats and any new ones are just minor variations of these.
+
+Have fun and work fast!
+'''
+
 import re , filenames , argparse
 
-# Global variable syntax data structure
+# Global variable define available re flags
+RE_FLAGS = {
+        "A" :   re.ASCII,
+        "I" :   re.IGNORECASE,
+        "L" :   re.LOCALE,
+        "M" :   re.MULTILINE,
+        "S" :   re.DOTALL,
+        "X" :   re.VERBOSE,
+        "U" :   re.UNICODE
+        }
+# Global variable syntax data structure for supported syntaxes
 BKMK_SYNTAX = {
         # Each syntax format has two properties: a print statement to
         # print data to that format and a sense statement which is a
         # regular expression to detect whether a line has that format
         # The data to print corresponds to (x,y,z) = (index,title,page)
         "cpdf"   : {
-            "print" : (lambda x,y,z: f"{x} \"{y}\" {z}\n"),
+            "print" : (lambda x,y,z: f"{z} \"{x}\" {y}\n"),
             "sense" : r"(?P<index>\d+) \"(?P<title>.+)\" (?P<page>\d+).*"
             },
         "gs"    : {
-            "print" : (lambda x,y,z: f"[ /Count {x} /Page {z} /Title ({y}) /OUT pdfmark\n"),
-            "sense" : r"\[ /Count (?P<index>\d+) /Page (?P<page>\d+) /Title \((?P<title>.+)\) /OUT pdfmark.*"
+            #by default, the minus sign in front of the count leaves the menu unexpanded
+            "print" : (lambda x,y,z: f"[ /Count -{z} /Page {y} /Title ({x}) /OUT pdfmark\n"),
+            "sense" : r"\[ /Count [-]*(?P<index>\d+) /Page (?P<page>\d+) /Title \((?P<title>.+)\) /OUT pdfmark.*"
             },
         "pdftk" : {
-            "print" : (lambda x,y,z: f"BookmarkTitle: {y}\nBookmarkLevel: {x}\nBookmarkPageNumber: {z}\n"),
-            "sense"  : r"BookmarkTitle: (?P<title>.+)\nBookmarkLevel: (?P<index>\d+)\nBookmarkPageNumber: (?P<page>\d+).*"
+            "print" : (lambda x,y,z: f"BookmarkBegin\nBookmarkTitle: {x}\nBookmarkLevel: {z}\nBookmarkPageNumber: {y}\n"),
+            "sense"  : r"BookmarkBegin.*\nBookmarkTitle: (?P<title>.+).*\nBookmarkLevel: (?P<index>\d+).*\nBookmarkPageNumber: (?P<page>\d+).*"
              }
     }
 
 
-def whichSyntax(entries):
+def whichSyntax(data):
     '''
-    Tests whether the given entry is a  bookmark
+    Tests whether the given entry is a bookmark
 
     Arguments:
         List : hopefully lines from a bookmark file
@@ -47,16 +75,13 @@ def whichSyntax(entries):
         String or Error : "cpdf" or "gs" syntax, None if not any syntax
     '''
 
-    if "BookmarkBegin" in entries[0]:
-        return "pdftk"
-
     for e in list(BKMK_SYNTAX):
-        if bool(re.match(BKMK_SYNTAX[e]["sense"],entries[0])):
+        if bool(re.search(BKMK_SYNTAX[e]["sense"],data)):
             return e
-    raise UserWarning("The first line of file is does not match any supported syntax")
+    raise UserWarning("The file is does not match any supported syntax")
 
 
-def convertSyntax(entries,syntax):
+def convertSyntax(data,output_syntax=None,offset=0):
     '''
     Converts one bookmark file syntax into another file.
     Should detect the input syntax automatically and write
@@ -65,35 +90,69 @@ def convertSyntax(entries,syntax):
     is already there, then just use the corresponding program
     to add the bookmarks.
     But maybe just do this for completeness.
+    This can also renumber the pages by the given offset
     '''
 
-    detected = whichSyntax(entries)
-    output = []
-    if syntax == "pdftk":
-        output.append("BookmarkBegin\n")
+    input_syntax = whichSyntax(data)
+    if output_syntax == None:
+        output_syntax = input_syntax
+    
+    titles,pages,indices = extractBkmkFile(data,BKMK_SYNTAX[input_syntax]["sense"])
 
-    for i,entry in enumerate(entries):
-        if detected == "pdftk":
-            # have to get around the fact that pdftk bookmark lines come in trios
-            if i % 3 == 1:
-                matches = re.search(BKMK_SYNTAX["pdftk"]["sense"],"\n".join(entries[i:i+3])+"\n")
-                (index,title,page) = (matches.group("index"),matches.group("title"),matches.group("page"))
-                output.append(BKMK_SYNTAX[syntax]["print"](index,title,page))
-            continue
-        else:
-            matches = re.search(BKMK_SYNTAX[detected]["sense"],entry)
-            (index,title,page) = (matches.group("index"),matches.group("title"),matches.group("page"))
-            output.append(BKMK_SYNTAX[syntax]["print"](index,title,page))
-
-    return output
+    return writeBkmkFile(output_syntax, \
+            titles, \
+            [int(e) + offset for e in pages],  \
+            indices,  \
+            index_input_syntax=input_syntax)
 
 
-def getIndex(entry):
+def createTocFromText(data,output_syntax=None,pattern="(?P<title>.+)\n(?P<page>\d+)",re_flags=re.U,edit=''):
     '''
-    Determine the index of an entry (this is simplistic and the logic should be refined depending on the content)
+    This function takes lines from a bookmarks in a raw text file and outputs them to a specified bookmark syntax.
+    It also needs to ask interactively for the page offset to calculate the page numbering right.
+
+    Arguments:
+        String : has the content of f.read() from an input file generated from the text of a pdf TOC
+        String : either "cpdf" or "gs", representing the output syntax
+        String : a regular expression string containing (?P<page>\d+) and (?P<title>.+) groups to parse the page numbers and entry text from the input file
+        re.FLAG : a regular expression flag defaulting to re.UNICODE
+        String : a regexp to apply to all titles. e.g. to remove all leading numbers: r'^[\d\.]+\.'
+
+    Return:
+        String : the finalized bookmark entries
+    '''
+    
+    if output_syntax == None:
+        raise UserWarning('No output syntax has been specified. Aborting!')
+    # check that given re has only the required fields
+    re_pattern = re.compile(rf"{pattern}")
+    assert set(['title','page']) == set(re_pattern.groupindex.keys())
+    
+    # Ask for the page offset 
+    offset_str = input(f"Enter the page in the pdf for the following TOC entry:\nText: {data[0]}\nPage:{data[1]}\n> ")
+    offset = int(offset_str) - int(re.match(re_pattern,data).group("page"))
+
+    # OPTIONAL delete regexp from the titles, e.g. the leading numbers of subsections
+    edits = {
+            False   :   (lambda x : x),
+            True    :   (lambda x : re.sub(edit,'',x))
+            }
+    
+    titles,pages = extractBkmkFile(data,re_pattern)
+
+    return writeBkmkFile(output_syntax,    \
+            [edits[bool(edit)](e) for e in titles],   \
+            [int(e) + offset for e in pages],   \
+            [getCPDFIndexFromTitle(e) for e in titles],   \
+            index_input_syntax="cpdf")
+
+
+def getCPDFIndexFromTitle(title):
+    '''
+    Determine the cpdf index of an entry (this is simplistic and the logic should be refined depending on the content)
     
     Arguments:
-        String : ideally a line from a table of contents
+        String : ideally the title of a table of contents entry
 
     Returns:
         Integer : 0 if the line starts without an integer or an integer without trailing decimal
@@ -101,95 +160,218 @@ def getIndex(entry):
                   2 if the line starts with a double decimal like X.X.X
                   3 the pattern goes on
     '''
-    #TODO make an option to delete the numbers for the final TOC
     
     repetitions = 0
     # This enforces no empty lines as well as getting index
-    while bool(re.match("^\w+" + repetitions * "\.[0-9]+",entry)):
+    while bool(re.match("^\w+" + repetitions * "\.[0-9]+",title)):
         repetitions += 1
+    # Note that this only outputs the cpdf convention! This is fixed by repairIndex()
     return repetitions - 1
 
 
-def createTocFromText(data,syntax):
+def extractBkmkFile(data,pattern):
     '''
-    This function takes lines from a bookmarks in a raw text file and outputs them to a specified bookmark syntax.
-    It also needs to ask interactively for the page offset to calculate the page numbering right.
+    This matches a regexp to a bkmk file, returning all the instances of each match group in its own list
+    Returns a tuple with the lists
+    '''
+    # Must use this order! index must be last other wise the case from createTocFromFile() which has no index will fail
+    preferred_order = {
+        "title" : 1,
+        "page"  : 2,
+        "index" : 3
+        }
+
+    pattern = re.compile(pattern)
+    groups = dict(pattern.groupindex)
+    # this is the case where we are creating a new bkmk which doesn't yet have indices
+    if len(groups.keys()) == 2:
+        del preferred_order['index']
+
+    # in the preferred order, list all matches in each group as its own list (possibly a permutation bsed on the ordering of the matching group)
+    return [ [ e[groups[i]-1] for e in re.findall(pattern,data) ] for i in list(preferred_order.keys()) ]
+
+
+def writeBkmkFile(output_syntax,titles,pages,indices,index_input_syntax=""):
+    '''
+    I was doing this over 5 times in the code so decided to centralize it
+    This takes in lists with the titles, pages, indices, and exports a string in the requested format
+    '''
+
+    bkmks = ""
+    for i,_ in enumerate(indices):
+        bkmks +=  BKMK_SYNTAX[output_syntax]["print"](    \
+                titles[i],pages[i],indices[i])
+    if output_syntax == index_input_syntax or not bool(index_input_syntax):
+        return bkmks 
+    else: # the index input syntax is not the same as the output syntax
+        return repairIndex(bkmks,index_input_syntax) # careful, recursion
+
+
+def repairIndex(bkmks,index_input_syntax):
+    '''
+    This function preserves the syntax of a bkmk file but repairs the indices to match that syntax.
+    This function is necessary because each of formats has its own convention.
+    For instance the index in cpdf is starts from 0 and refers to how many levels deep into the TOC that entry is.
+    The pdftk index is the same logic as cpdf but 1-indexed (add 1 to the cpdf index).
+    In gs, the index given by /Count N  means that that entry has N child entries in the next sublevel.
 
     Arguments:
-        List : has the content of f.readlines() from an input file generated from the text of a pdf TOC and should have bookmark text entries on the odd numbered lines with corresponding pagenumbers on the even numbered lines
-        String : either "cpdf" or "gs", representing the output syntax
+        String  :   The bookmark file
+        String  :   (Optional) The index input syntax (this can be detected regardless)
 
-    Return:
-        List : a list of strings where the strings are the finalized bookmark entries
+    Returns:
+        String  :   The finalized bookmark file
     '''
-    
-    formatfn = BKMK_SYNTAX[syntax]["print"]
-    # there has to be an even number of lines (entries come in pairs)
-    length = len(data)
-    assert length % 2 == 0
-    # Ask for the page offset 
-    offset_str = input(f"Enter the page in the pdf for the following TOC entry:\nText: {data[0]}\nPage:{data[1]}\n> ")
-    offset = int(offset_str) - int(data[1])
 
-    output = []
-    # finish and export bookmarks
-    if syntax == "pdftk":
-        output.append("BookmarkBegin\n")
-    for i in range(int(length/2)):
-        # Check that even line numbers are digits (roman numerals not allowed)
-        assert data[2*i+1].isdigit()
-        # Compile entry
-        output.append(formatfn( \
-            getIndex(data[2*i]),   \
-            data[2*i], \
-            (int(data[2*i+1]) + offset)))
+    output_syntax = whichSyntax(bkmks)
 
-    return output
+    if output_syntax == index_input_syntax:
+        return bkmks
+                    
+    else:
+        titles,pages,indices = extractBkmkFile(bkmks,BKMK_SYNTAX[output_syntax]["sense"])
+        indices = [int(e) for e in indices]
+
+        # convert!
+        if output_syntax == "gs": # 
+            # convert cpdf or pdftk index to gs index (works because this is a comparison method)
+            for i,e in enumerate(indices):
+                indices[i] = 0
+                try:
+                    # finds the number of subsequent indices 1 larger than the current one before the next index which has the same value as the current one
+                    counter = 0
+                    while indices[i + 1 + counter] != e:
+                        if indices[i + 1 + counter] == e + 1:
+                            indices[i] += 1
+                        counter += 1
+                except IndexError:
+                    pass
+
+        else: # outputting to cpdf or pdftk
+            if index_input_syntax == "gs":
+                # convert gs to cpdf
+                # in this loop, we go from end to beginning and get the cpdf index at each step
+                    # each run through this loops determines how many of the preceeding entries are parents of indices[i]
+                def recursiveDeleteTerminalBranches(roots):
+                    '''
+                    This takes in a list and removes terminal branches until there are none
+                    '''
+                    tree = roots[:]
+                    for i,e in list(enumerate(tree))[::-1]:
+                        if bool(e):
+                            try:
+                                # if every index in that range is zero, it is a terminal branch
+                                # note that if tree[i] is in the range(e) (i.e. len(tree[i+1:i+1+e]) < len(range(e)))
+                                # then there is match, so we won't delete it, as desired
+                                if tree[i+1:i+1+e] == [0 for x in range(e)]:
+                                    # replace e with a zero but remove e entries
+                                    del tree[i:i+e]
+                                    # prune the tree
+                                    tree = recursiveDeleteTerminalBranches(tree)
+                                else:
+                                    continue
+                            except IndexError:
+                                continue
+                        else:
+                            continue
+
+                    #print(tree)
+                    return tree
+
+                results = [0 for e in indices]
+                fast_search = 0
+                for i,_ in enumerate(indices):
+                    results[i] = len([x for x in recursiveDeleteTerminalBranches(indices[fast_search:i]) if x > 0])
+                    # if the entry has no parent, ignore all the preceeding entries
+                    if results[i] == 0:
+                        fast_search = i
+                indices = results
+
+                if output_syntax == "pdftk":
+                    # convert cpdf to pdftk by adding 1
+                    indices = [ e + 1 for e in indices ]
+
+            elif index_input_syntax == "pdftk": # output_syntax == "cpdf"
+                # convert pdftk to cpdf by subtracting 1
+                indices = [ e - 1 for e in indices ]
+
+            else: # converting cpdf to pdftk by adding 1
+                indices = [ e + 1 for e in indices ]
+
+    return writeBkmkFile(output_syntax,titles,pages,indices)
 
 
-def completeTOC():
+def create(args):
     '''
-    This function calls either cpdf or gs to complete the pdf with its bookmarks.
-    Should use the subprocess module.
-    Needs to ask for the pdf file to add the bookmarks to.
+    Calls the right functions to make things create
     '''
-    pass
+    filenames.fileOperate(createTocFromText, \
+            readfile=args.input, \
+            writefile=args.output,   \
+            readext=".txt",writeext=".txt", \
+            output_syntax=args.syntax, \
+            pattern=args.pattern,   \
+            re_flags=re_flags[args.re_flags],   \
+            edit=args.edit)
+    return
 
 
-def main():
+def convert(args):
+    '''
+    Calls the right functions to make things convert
+    '''
+    filenames.fileOperate(convertSyntax, \
+            readfile=args.input, \
+            writefile=args.output,   \
+            readext=".txt",writeext=".txt", \
+            output_syntax=args.syntax, \
+            offset=args.number)
+    return
+
+
+def cli():
     '''
     Run the bkmk.py script.
     This handles its command-line arguments and executes the requested functions.
     '''
 
-    # Define available commands
-    commands = {
-            "create" : createTocFromText,
-            "convert" : convertSyntax
-            }
 
     # Define command-line arguments
-    parser = argparse.ArgumentParser(   \
+    parser = argparse.ArgumentParser(prog='bkmk.py',   \
             description='''a script to produce pdf bookmarks''')
-
-    parser.add_argument("action", choices=list(commands),   \
-            help="choose an action")
-    parser.add_argument("format", choices=list(BKMK_SYNTAX),    \
-            help="choosebookmark output format")
-    parser.add_argument("-i","--input", \
+    # Main arguments
+    parser.add_argument("syntax", choices=list(BKMK_SYNTAX),    \
+            help="choose bookmark output format")
+    parser.add_argument("input", \
             help="input file name")
-    parser.add_argument("-o","--output",    \
+    parser.add_argument("output",    \
             help="output file name")
 
+    subparsers = parser.add_subparsers(dest="subcommand", help='sub-commands')
+    # Subparsers for each command
+    parser_convert = subparsers.add_parser("convert",   \
+            help="use this command to change a bookmark file syntax or to renumber the pages")
+    parser_convert.set_defaults(func=convert)
+    # convert arguments
+    parser_convert.add_argument("-n","--number",default=0,type=int,    \
+            help="apply an offset to all page numbers")
+
+    parser_create = subparsers.add_parser("create", \
+            help="use this command to create bookmarks from a raw TOC file")
+    parser_create.set_defaults(func=create)
+    # create arguments
+    parser_create.add_argument("-p","--pattern",default="(?P<title>.+)\n(?P<page>\d+)",  \
+            help="regexp to read the input file containing (?P<page>\d+) and (?P<title>.+) groups")
+    parser_create.add_argument("-r","--re-flags", choices=list(RE_FLAGS),  \
+            help="optionally add a regexp flag to specify --pattern", default="U")
+    parser_create.add_argument("-e","--edit",  \
+            help="apply a regexp to the title. e.g. to removing leading numbers: r'^[\d\.]+\.'", default="")
+    
     args = parser.parse_args()  
 
     print("bkmk.py - a script to manipulate pdf bookmarks\n")
-
-    filenames.fileOperate(commands[args.action], \
-            newlines=False,  \
-            readfile=args.input, writefile=args.output,   \
-            readext=".txt",writeext=".txt", \
-            syntax=args.format)
+    
+    args.func(args)
 
     # Close script
     print("\nBookmarks finished!")
@@ -198,5 +380,5 @@ def main():
 
 # run script if called from command line
 if __name__ == "__main__":
-    main()    
+    cli()    
     raise SystemExit
