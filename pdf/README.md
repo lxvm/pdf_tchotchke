@@ -155,6 +155,10 @@ Here are some commonly used tips that are a helpful step for automating repetiti
 For completeness, some other open source command line pdf tools include [`mupdf`](https://www.mupdf.com/) and [`qpdf`](http://qpdf.sourceforge.net/).
 They may be useful for additional tasks.
 
-For a general discussion of this topic, see [this](https://superuser.com/questions/276311/how-to-import-export-and-edit-bookmarks-of-a-pdf-file).
+For a general discussion of pdf bookmarks, see [this](https://superuser.com/questions/276311/how-to-import-export-and-edit-bookmarks-of-a-pdf-file).
 
-Others have done [similar work](https://github.com/goerz/bmconverter.py) that is a different implementation using classes..
+Others have done [similar work](https://github.com/goerz/bmconverter.py) that is a different implementation using classes.
+
+Text extraction from pdfs is a difficult task which others have done already.
+[PDFBox](https://pdfbox.apache.org/index.html), written in Java, can do all of these [things](https://www.tutorialkart.com/apache-pdfbox-tutorial/).
+The [Text Extraction Toolkit (TET)](https://www.pdflib.com/products/tet/) is an expensive software, but is apparently very good at its task.
