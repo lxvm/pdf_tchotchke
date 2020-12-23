@@ -71,24 +71,27 @@ The most manual and straightforward option is to simply type up the TOC yourself
 Using the [`cpdf`](https://github.com/coherentgraphics/cpdf-binaries) utility the bookmark file format is quite straight forwards.
 The syntax for each line is
 ```
-[index] "[text]" [page number]
+<index> "<text>" <page number> "[<page number>/XYZ <i> <j> <k>]"
 ```
 Where each line represents a bookmark entry.
 
-The `[index]` should be an integer representing the level of the bookmark entry in the index.
+The `<index>` should be an integer representing the depth of the bookmark entry in the index.
 The value of this integer depends on the format which encodes the depth of each entry in the TOC.
 For example, in `cpdf` all the beginnings of chapters may have index 0, their sections index 1, subsections index 2.
 If the index goes beyond 2 you are probably dealing with a very large and detailed document!
 It is best to reproduce the original structure of the TOC though, so if index larger than 2 is required then use it.
 
-The `"[text]"` entry contains the text describing the bookmark entry.
+The `"<text>"` entry contains the text describing the bookmark entry.
 It is often the title of the chapter or the name of the section.
 For `cpdf`, quotations surrounding the text are required.
 
-The `[page number]` is the page number in the pdf at which the entry appears.
+The `<page number>` is the page number in the pdf at which the entry appears.
 This is typically offset by a certain integer from the page numbers appearing in the TOC.
 For example, if page 1 in the TOC is page 15 in the pdf, then 14 must be added to each page number from the TOC.
 It is often most convenient to automate this step.
+
+The `"[<page number>/XYZ <i> <j> <k>]"` is optional and it lets you specify at what position on the page the entry i in terms of XYZ coordinates.
+The page number must be repeated, and `<i> <j> <k>` are integers specifying the points on the page.
 
 The automation of pdf bookmark generation from a TOC is made easy by this script as soon as you have the text of the TOC.
 How you get that depends on the following cases:
