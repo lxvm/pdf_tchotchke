@@ -51,11 +51,13 @@ BKMK_SYNTAX = {
         "cpdf"   : {
             "print" : (lambda x,y,z: f"{z} \"{x}\" {y}\n"),
             "sense" : r"(?P<index>\d+) \"(?P<title>.+)\" (?P<page>\d+).*"
+            # View information is specified by appending "[<page number></view command>]"
             },
         "gs"    : {
             #by default, the minus sign in front of the count leaves the menu unexpanded
             "print" : (lambda x,y,z: f"[ /Count -{z} /Page {y} /Title ({x}) /OUT pdfmark\n"),
             "sense" : r"\[ /Count [-]*(?P<index>\d+) /Page (?P<page>\d+) /Title \((?P<title>.+)\) /OUT pdfmark.*"
+            # In addition, the /View [</view command>] option and its variations can be added
             },
         "pdftk" : {
             "print" : (lambda x,y,z: f"BookmarkBegin\nBookmarkTitle: {x}\nBookmarkLevel: {z}\nBookmarkPageNumber: {y}\n"),
