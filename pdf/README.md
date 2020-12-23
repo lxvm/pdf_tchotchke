@@ -130,6 +130,23 @@ Some elements of the output will have to be reviewed by hand such as entries wit
 - `pdftk in.pdf update_info bkmk.txt output out.pdf`
 - `gs -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=out.pdf in*.pdf bkmk.txt`
 
+## Tips
+
+It is nice not to type a table of contents for every textbook, yet it is still an arduous process to get all the facts right about the document.
+I have been thrown off by unique quirks of several books, including:
+
+- The main TOC of the book only lists the chapters, but then a separate TOC for items in each chapter is printed at the start of each chapter.
+- The publisher of the pdf kindly removes all the blank pages from the pdf, causing the TOC page numbers in the front of the book to be offset from their actual locations in the text.
+
+Usually these quirks have to be corrected by hand before passing the TOC to `bkmk.py` where it can be parsed using regular expressions.
+This processing, though by hand, is systematic and benefits from regular expressions, search and replace, and some basic arithmetic.
+A text editor can help you with these tasks, and a capable one is Vim.
+Here are some commonly used tips that are a helpful step for automating repetitive tasks
+
+- When getting the TOC from the pdf using `pdftotext`, use the `-layout` flag to save time by retaining the visual structure of the TOC
+- In Vim, marking the page numbers at the ends of lines (for parsing with `bkmk.py`) and offsetting their numbers at the same time can be done with `:%s/\(\d\+\)$/\='@'.(submatch(1)+20)/g`.
+- In Vim, one can create subsection numberings, or continue them (since sometimes the textbook's lessons are numbered but the exercises aren't), and here is an example: `:%s/^\(\d\+\.\)\(\d\+\)\(.\+\n\)\(Exercises.\+\n\)/\=submatch(1).submatch(2).submatch(3).submatch(1).(str2nr(submatch(2))+1).' '.submatch(4)/g`
+
 ## Extra
 
 For completeness, some other open source command line pdf tools include [`mupdf`](https://www.mupdf.com/) and [`qpdf`](http://qpdf.sourceforge.net/).
