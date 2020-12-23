@@ -128,9 +128,15 @@ def createTocFromText(data,output_syntax=None,pattern="(?P<title>.+)\n(?P<page>\
     re_pattern = re.compile(rf"{pattern}")
     assert set(['title','page']) == set(re_pattern.groupindex.keys())
     
+    # initial data
+    first_entry = re.search(re_pattern,data).group("title")
+    first_page = re.search(re_pattern,data).group("page")
+    if first_page == '' or first_entry == '':
+        raise UserWarning(f'The first entry or page did not match: you may want to review {pattern}')
+    
     # Ask for the page offset 
-    offset_str = input(f"Enter the page in the pdf for the following TOC entry:\nText: {data[0]}\nPage:{data[1]}\n> ")
-    offset = int(offset_str) - int(re.match(re_pattern,data).group("page"))
+    offset_str = input(f"Enter the page in the pdf for the following TOC entry:\nText: {first_entry}\nPage: {first_page}\n> ")
+    offset = int(offset_str) - int(first_page)
 
     # OPTIONAL delete regexp from the titles, e.g. the leading numbers of subsections
     edits = {
@@ -188,7 +194,7 @@ def extractBkmkFile(data,pattern):
         del preferred_order['index']
 
     # in the preferred order, list all matches in each group as its own list (possibly a permutation bsed on the ordering of the matching group)
-    return [ [ e[groups[i]-1] for e in re.findall(pattern,data) ] for i in list(preferred_order.keys()) ]
+    return [ [ e[groups[i]-1].strip() for e in re.findall(pattern,data) ] for i in list(preferred_order.keys()) ]
 
 
 def writeBkmkFile(output_syntax,titles,pages,indices,index_input_syntax=""):
@@ -311,7 +317,7 @@ def create(args):
             readext=".txt",writeext=".txt", \
             output_syntax=args.syntax, \
             pattern=args.pattern,   \
-            re_flags=re_flags[args.re_flags],   \
+            re_flags=RE_FLAGS[args.re_flags],   \
             edit=args.edit)
     return
 
