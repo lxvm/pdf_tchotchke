@@ -271,4 +271,4 @@ if __name__ == "__main__":
     # give all sorts of funny paths for it to figure out
     # try with and without extension and input path features
     # make sure
-    raise SystemExit
+    raise SystemExit()

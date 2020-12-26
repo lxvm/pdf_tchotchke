@@ -390,4 +390,4 @@ def cli():
 # run script if called from command line
 if __name__ == "__main__":
     cli()    
-    raise SystemExit
+    raise SystemExit()

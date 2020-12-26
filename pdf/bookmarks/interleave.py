@@ -71,4 +71,4 @@ def cli():
 
 if __name__ == "__main__":
     cli()
-    raise SystemExit
+    raise SystemExit()
