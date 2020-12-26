@@ -66,7 +66,7 @@ def assert_conditions_pdf(pdf_file_obj):
     '''
 
     for line in pdf_file_obj:
-        assert_uncompressed_pdf(line):
+        assert_uncompressed_pdf(line)
         # add more assertion statements here
     return
 
@@ -88,20 +88,25 @@ def assert_uncompressed_pdf(pdf_line):
                     ]
 
         for filter in filters:
-        p = re.compile(filter)
-        assert not bool(p.search(pdf_line))
+            p = re.compile(filter)
+            assert not bool(p.search(pdf_line))
     except AssertionError as e:
         raise AssertionError(f'{e}: this script requires an uncompressed pdf')
+
+    return
 
 # start the pdf parsing functions
 
 
 def delete_pdf_indirect_objects_and_refs(labels,depth=0):
     '''
-    this removes the indirect pdf objects ans
+    this removes the indirect pdf objects in a list by their label.
+    This function can optionally recurse and delete objects referenced
+    by those in the initial list or those objects which reference those in the list
     '''
+    pass
 
-# start the functions which interface with the parsers
+# Command-line interface with shell and parsers
 def cli_delete_pdf_indirect_objects(args):
     '''
     deletes a specific 
@@ -115,6 +120,7 @@ def cli_delete_pdf_search(args):
     '''
     pass
 
+
 def cli():
     '''
     This creates the command-line interface for redact.py. Use
@@ -125,18 +131,19 @@ def cli():
     parser = argparse.ArgumentParser(   \
         description='''A script to remove objects in a pdf''')
   
-    subparsers = parser.add_subparsers(help = 'how to remove')
+    subparsers = parser.add_subparsers(help = 'removal method')
    
     # Setup the delete object command
     parser_object = subparsers.add_parser(  \
             'objects',   \
-            help = 'delete an indirect object from pdf by their reference number')
+            help = 'delete an indirect object from pdf by their reference number.   \
+                    This is useful for debugging.')
     parser_object.set_defaults( \
             func=cli_delete_pdf_indirect_objects)
     parser_object.add_argument( \
-            'ref#', \
-            type=int,   \
-            help = 'the numbers of objects to delete')
+            '-o','--object', \
+            type=int,action='append',   \
+            help = 'a list of numbers corresponding to objects to delete')
 
     # Setup the delete search command
     parser_search = subparsers.add_parser(  \
@@ -149,16 +156,16 @@ def cli():
             type=argparse.FileType('rb'), \
             help = 'path to a text file with lines to search and remove')
     parser_search.add_argument( \
-            '-f','--format', \
+            '-f','--formats', \
             choices=list(PDF_STR_ENCODINGS.keys()),default=['c'], \
-            help = 'try deleting objects containing pattern as literal string ('c') or hexadecimal('x','X')')
+            help = 'try deleting objects containing pattern as literal string (\'c\') or hexadecimal(\'x\',\'X\')')
     parser_search.add_argument( \
             '-F','--all-formats',    \
-            dest='format',action='store_const', \
+            dest='formats',action='store_const', \
             const=list(PDF_STR_ENCODINGS.keys()),\
             help = 'tries all string encodings, overriding --format')
     parser_search.add_argument( \
-            '-t','--type',   \
+            '-t','--types',   \
             choices=list(PDF_OBJ_TYPES.keys()), default=['stream'],    \
             action='extend',nargs='+',    \
             help = 'if the search patterns appears as text on the pdf canvas, \
@@ -167,9 +174,9 @@ def cli():
                     Requires: (?pdftotext) TBD')
     parser_search.add_argument( \
             '-T','--all-types',  \
-            dest='format',action='store_const', \
+            dest='types',action='store_const', \
             const=list(PDF_OBJ_TYPES.keys()),\
-            help = 'tries all pdf object types, overriding --objects')
+            help = 'tries all pdf object types, overriding --types')
 
     # Main arguments
     #parser.add_argument(    \
@@ -187,20 +194,23 @@ def cli():
     parser.add_argument(    \
             # this is an optional argument, uses input filename if an output not given
             'output',   \
-            nargs='?'  \
+            nargs='?',  \
             help = 'enter the name or path of pdf to write to')
     
     args = parser.parse_args()
     
-    # create a safe output file name if given or not given
+    # create a safe output file object if a name is given or not
     if args.output == None:
-        args.output = filenames.fileOut(writefile=args.input,ext='.pdf')
+        args.output = open(filenames.fileOut(writefile=args.input.name,ext='.pdf'),'wb')
     else:
-        args.output = filenames.fileOut(writefile=args.output,ext='.pdf')
+        args.output = open(filenames.fileOut(writefile=args.output,ext='.pdf'),'wb')
 
     # under development: check types in those being implemented
-    assert args.types in ['stream','dict']
+    if args.func == cli_delete_pdf_search:
+        for e in args.types:
+            assert e in ['stream','dict']
 
+    #print(args)
     args.func(args)
 
     return
