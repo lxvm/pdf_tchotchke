@@ -186,7 +186,8 @@ def cli():
     parser.add_argument(    \
             '-v','--verbose',   \
             dest='verbosity', action='count', default = 0,  \
-            help = 'print information about the match results')
+            help = 'Verbosity, up to 4 levels by repeating v:   \
+                    ERROR=1, WARN=2, INFO=3, DEBUG=4')
     parser.add_argument(    \
             'input',    \
             type=argparse.FileType('rb'),   \
@@ -211,6 +212,7 @@ def cli():
             assert e in ['stream','dict']
 
     #print(args)
+    logging.basicConfig(level=log_levels[args.verbosity])
     args.func(args)
 
     return
