@@ -373,7 +373,7 @@ def cli():
         return bytes(string,'utf-8')
     parser.add_argument('-b','--beg-env',default=b'^\d+ 0 obj',type=mybytes, \
             help='string or python regexp to match the beginning of a text block containing the main pattern')
-    parser.add_argument('-e','--end-env',default=b'^\d+ 0 obj',type=mybytes, \
+    parser.add_argument('-e','--end-env',default=b'^endobj',type=mybytes, \
             help='string or python regexp to match the beginning of a text block containing the main pattern')
     
     args = parser.parse_args()

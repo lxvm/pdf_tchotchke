@@ -373,10 +373,14 @@ def cli():
             help="choose bookmark output format")
     parser.add_argument("input", \
             help="input file name")
-    parser.add_argument("output",    \
+    parser.add_argument("output",nargs='?',    \
             help="output file name")
 
     args = parser.parse_args()  
+    
+    # create a safe output file name if given or not given
+    if args.output == None:
+        args.output = filenames.fileOut(writefile=args.input,ext='.txt')
 
     print("bkmk.py - a script to manipulate pdf bookmarks\n")
     
