@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 
 # bkmk.py
-# A script to generate pdf bookmarks in cpdf,gs,pdftk syntaxes
-# Written by Lorenzo Van Muñoz
-# Last updated Dec 21 2020
+# Author: Lorenzo Van Muñoz
+# Last updated Dec 26, 2020
+
 '''
-This script uses the power of regular expressions to identify
+A script to generate pdf bookmarks in cpdf,gs,pdftk syntaxes
+
+This script uses regular expressions to identify
 relevant bookmark information and to typeset the syntaxes.
 It also supports conversion between the different supported formats.
 
@@ -30,7 +32,10 @@ formats and any new ones are just minor variations of these.
 Have fun and work fast!
 '''
 
-import re , filenames , argparse
+import re
+import argparse
+
+from pdftools.utils import filenames
 
 # Global variable define available re flags
 RE_FLAGS = {
@@ -51,10 +56,10 @@ BKMK_SYNTAX = {
         "cpdf"   : {
             "print" : (lambda x,y,z: f"{z} \"{x}\" {y}\n"),
             "sense" : r"(?P<index>\d+) \"(?P<title>.+)\" (?P<page>\d+).*"
-            # View information is specified by appending "[<page number></view command>]"
+            # View information is given by "[<page number></view command>]"
             },
         "gs"    : {
-            #by default, the minus sign in front of the count leaves the menu unexpanded
+            # the minus sign before the count leaves the menu unexpanded
             "print" : (lambda x,y,z: f"[ /Count -{z} /Page {y} /Title ({x}) /OUT pdfmark\n"),
             "sense" : r"\[ /Count [-]*(?P<index>\d+) /Page (?P<page>\d+) /Title \((?P<title>.+)\) /OUT pdfmark.*"
             # In addition, the /View [</view command>] option and its variations can be added
@@ -99,12 +104,13 @@ def convertSyntax(data,output_syntax=None,offset=0):
     if output_syntax == None:
         output_syntax = input_syntax
     
-    titles,pages,indices = extractBkmkFile(data,BKMK_SYNTAX[input_syntax]["sense"])
+    titles,pages,indices = extractBkmkFile(
+            data,BKMK_SYNTAX[input_syntax]["sense"])
 
-    return writeBkmkFile(output_syntax, \
-            titles, \
-            [int(e) + offset for e in pages],  \
-            indices,  \
+    return writeBkmkFile(output_syntax,
+            titles,
+            [int(e) + offset for e in pages],
+            indices,
             index_input_syntax=input_syntax)
 
 
@@ -140,7 +146,7 @@ def createTocFromText(data,output_syntax=None,pattern="(?P<title>.+)\n(?P<page>\
     offset_str = input(f"Enter the page in the pdf for the following TOC entry:\nText: {first_entry}\nPage: {first_page}\n> ")
     offset = int(offset_str) - int(first_page)
 
-    # OPTIONAL delete regexp from the titles, e.g. the leading numbers of subsections
+    # OPTIONAL delete regexp from the titles
     edits = {
             False   :   (lambda x : x),
             True    :   (lambda x : re.sub(edit,'',x))
@@ -148,10 +154,10 @@ def createTocFromText(data,output_syntax=None,pattern="(?P<title>.+)\n(?P<page>\
     
     titles,pages = extractBkmkFile(data,re_pattern)
 
-    return writeBkmkFile(output_syntax,    \
-            [edits[bool(edit)](e) for e in titles],   \
-            [int(e) + offset for e in pages],   \
-            [getCPDFIndexFromTitle(e) for e in titles],   \
+    return writeBkmkFile(output_syntax,
+            [edits[bool(edit)](e) for e in titles],
+            [int(e) + offset for e in pages],
+            [getCPDFIndexFromTitle(e) for e in titles],   
             index_input_syntax="cpdf")
 
 
@@ -207,7 +213,7 @@ def writeBkmkFile(output_syntax,titles,pages,indices,index_input_syntax=""):
 
     bkmks = ""
     for i,_ in enumerate(indices):
-        bkmks +=  BKMK_SYNTAX[output_syntax]["print"](    \
+        bkmks +=  BKMK_SYNTAX[output_syntax]["print"](    
                 titles[i],pages[i],indices[i])
     if output_syntax == index_input_syntax or not bool(index_input_syntax):
         return bkmks 
@@ -313,13 +319,13 @@ def create(args):
     '''
     Calls the right functions to make things create
     '''
-    filenames.fileOperate(createTocFromText, \
-            readfile=args.input, \
-            writefile=args.output,   \
-            readext=".txt",writeext=".txt", \
-            output_syntax=args.syntax, \
-            pattern=args.pattern,   \
-            re_flags=RE_FLAGS[args.re_flags],   \
+    filenames.fileOperate(createTocFromText, 
+            readfile=args.input, 
+            writefile=args.output,   
+            readext=".txt",writeext=".txt", 
+            output_syntax=args.syntax, 
+            pattern=args.pattern,   
+            re_flags=RE_FLAGS[args.re_flags],   
             edit=args.edit)
     return
 
@@ -328,11 +334,11 @@ def convert(args):
     '''
     Calls the right functions to make things convert
     '''
-    filenames.fileOperate(convertSyntax, \
-            readfile=args.input, \
-            writefile=args.output,   \
-            readext=".txt",writeext=".txt", \
-            output_syntax=args.syntax, \
+    filenames.fileOperate(convertSyntax, 
+            readfile=args.input, 
+            writefile=args.output,   
+            readext=".txt",writeext=".txt", 
+            output_syntax=args.syntax, 
             offset=args.number)
     return
 
@@ -345,35 +351,35 @@ def cli():
 
 
     # Define command-line arguments
-    parser = argparse.ArgumentParser(prog='bkmk.py',   \
+    parser = argparse.ArgumentParser(prog='bkmk.py',   
             description='''a script to produce pdf bookmarks''')
 
     subparsers = parser.add_subparsers(help='action!')
     # Subparsers for each command
-    parser_convert = subparsers.add_parser("convert",   \
+    parser_convert = subparsers.add_parser("convert",   
             help="change a bookmark file syntax or renumber the pages")
     parser_convert.set_defaults(func=convert)
     # convert arguments
-    parser_convert.add_argument("-n","--number",default=0,type=int,    \
+    parser_convert.add_argument("-n","--number",default=0,type=int,    
             help="apply an offset to all page numbers")
 
-    parser_create = subparsers.add_parser("create", \
+    parser_create = subparsers.add_parser("create", 
             help="create bookmarks from a raw TOC file")
     parser_create.set_defaults(func=create)
     # create arguments
-    parser_create.add_argument("-p","--pattern",default="(?P<title>.+)\n(?P<page>\d+)",  \
+    parser_create.add_argument("-p","--pattern",default="(?P<title>.+)\n(?P<page>\d+)",  
             help="regexp to read the input file containing (?P<page>\d+) and (?P<title>.+) groups")
-    parser_create.add_argument("-r","--re-flags", choices=list(RE_FLAGS),  \
+    parser_create.add_argument("-r","--re-flags", choices=list(RE_FLAGS),  
             help="optionally add a regexp flag to specify --pattern", default="U")
-    parser_create.add_argument("-e","--edit",  \
+    parser_create.add_argument("-e","--edit",  
             help="apply a regexp to the title, e.g. to removing leading numbers: r'^[\d\.]+\.'", default="")
     
     # Main arguments
-    parser.add_argument("syntax", choices=list(BKMK_SYNTAX),    \
+    parser.add_argument("syntax", choices=list(BKMK_SYNTAX),    
             help="choose bookmark output format")
-    parser.add_argument("input", \
+    parser.add_argument("input", 
             help="input file name")
-    parser.add_argument("output",nargs='?',    \
+    parser.add_argument("output",nargs='?',    
             help="output file name")
 
     args = parser.parse_args()  

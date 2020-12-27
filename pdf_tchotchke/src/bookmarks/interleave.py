@@ -5,7 +5,9 @@
 # Written by Lorenzo Van Muñoz
 # Last Updated Dec 21 2020
 
-import argparse , filenames
+import argparse
+
+from pdftools.utils import filenames
 
 def interleave(lines):
     '''

@@ -69,7 +69,7 @@ def getSafePath(chosenname,overwrite=False):
     
     if not overwrite:
         # A safe name to not overwrite any files
-        # Separate the filename from the leftmost period which marks the extension
+        # Separate the filename from the rightmost period which marks the last extension
         path_components = chosenname.rsplit(".",1)
         safepath = path_components[0]
         # when there is no extension provided, ignore the extension
