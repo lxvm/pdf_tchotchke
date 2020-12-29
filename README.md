@@ -31,4 +31,5 @@ The main contents of this package are the following command-line scripts:
 - `interleave`: a helper script for `bkmk`
 - `whiteout`: a script that whites-out specific text objects in a pdf
 - `redact`: a script that deletes objects from pdfs
+
 For more details, see the README's herein.
