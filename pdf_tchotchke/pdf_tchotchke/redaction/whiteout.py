@@ -11,7 +11,13 @@ and then tries identifying the text in
 various encodings.
 '''
 
-import os , re , filenames , argparse , difflib , subprocess #, PyPDF2 
+import os 
+import re 
+import argparse
+import difflib
+import subprocess
+
+from ..utils import filenames 
 
 # Global variables
 # Define available encodings of byte-strings with format specification mini-language
@@ -42,7 +48,7 @@ def returnEnvRanges(file_obj,beg_env,end_env,search_range=False):
     '''
 
 
-def findEnvAndMatchRanges(f,text_patterns,formats,beg_env,end_env,args):
+def findEnvAndMatchRanges(f,text_patterns,formats,beg_env,end_env):
     '''
     Searches for environments (including nested ones) and returns ranges of their indices in the file.
     If any of those environments contains a match with any of the patterns in any of the formats, these ranges are returned separately so they can be deleted.
@@ -90,18 +96,19 @@ def findEnvAndMatchRanges(f,text_patterns,formats,beg_env,end_env,args):
             beg_index,beg_bool = beg_env_indices.pop()
             end_index = end_env_indices.pop()
             if beg_bool:
-                if args.func == deleteTextFromPDF:
-                    matched_envs.append(range(  \
+                # in the case of a pdf
+                if end_env in [b'^endobj',b'^ET']:
+                    matched_envs.append(range(  
                             beg_index+1,end_index))
                 else:
-                    matched_envs.append(range(  \
+                    matched_envs.append(range(  
                             beg_index,end_index+1))
             else:
-                if args.func == deleteTextFromPDF:
-                    unmatched_envs.append(range(    \
+                if end_env in [b'^endobj',b'^ET']:
+                    unmatched_envs.append(range(    
                             beg_index+1,end_index))
                 else:
-                    unmatched_envs.append(range(    \
+                    unmatched_envs.append(range(    
                             beg_index,end_index+1))
     if bool(beg_env_indices) or bool(end_env_indices):
         print('remover.py Warning: Environment beginnings and endings are mismatched: The input file may be damaged')
@@ -150,9 +157,9 @@ def findPDFMatchesBruteForce(f,text_patterns,env_matches):
             g.writelines([ replacePDFTextWithSpace(e) if i in rng else e for i,e in enumerate(pdf) ])
         try:
             subprocess.run(['pdftotext',tmp_pdf_path,tmp_text_path])
-            if searchDiff(b''.join([ bytes(e[1:],'utf-8')   \
-                    for i,e in enumerate(difflib.unified_diff(  \
-                    og_text,open(tmp_text_path,'r').read())) \
+            if searchDiff(b''.join([ bytes(e[1:],'utf-8')   
+                    for i,e in enumerate(difflib.unified_diff(  
+                    og_text,open(tmp_text_path,'r').read())) 
                     if i > 2]), patterns, brute_results):
                 brute_search_matches.append(rng)
             else:
@@ -207,15 +214,20 @@ def findPDFMatchesBruteForce(f,text_patterns,env_matches):
 
 def deleteTextFromPDF(args):
     '''
-    Entire BT/ET environments including the BT/ET strings themselves can be deleted from the pdf without throwing off pdftotext
+    This will whiteout / replace with spaces the search text.
+    The default scope for whiting out is a single pdf object at a time.
+    This is preferred because the object tends to be the basic unit of text
+    on the page and it will DRASTICALLY speed up the brute force option 
+    compared to replacing the text environments one by one.
     '''
     # get the original text patterns to search, and separately those patterns in all requested encodings
     with args.patterns as p:
         text_patterns = list(set([ e.strip() for e in p ]))
     with args.input as f:
-        search_env_matches , env_matches , search_results =     \
-                findEnvAndMatchRanges(f,text_patterns,  \
-                args.format,args.beg_env,args.end_env,args)
+        search_env_matches, env_matches, search_results = \
+                findEnvAndMatchRanges(
+                        f, text_patterns, args.format, 
+                        args.beg_env, args.end_env)
         
         if args.verbose:
             print(f'Generic results: {f.name}')
@@ -232,8 +244,7 @@ def deleteTextFromPDF(args):
             print('Brute Force!')
             f.seek(0)
             brute_search_matches,brute_search_unmatched, brute_results =   \
-                    findPDFMatchesBruteForce(f,text_patterns,   \
-                    env_matches)
+                    findPDFMatchesBruteForce(f, text_patterns, env_matches)
             # add the indices of the new matches
             [all_matched_indices.update(set(rng)) for rng in brute_search_matches]
             # remove the indices of new ranges that were matched
@@ -284,8 +295,8 @@ def deleteGeneric(args):
     with args.patterns as p:
         text_patterns = [ e.strip() for e in p ]
     with args.input as f:
-        search_env_matches,env_matches,search_results =  \
-                findEnvAndMatchRanges(f,text_patterns,  \
+        search_env_matches,env_matches,search_results =  
+                findEnvAndMatchRanges(f,text_patterns,  
                 args.format,args.beg_env,args.end_env)
 
         all_matched_indices = set()
@@ -332,53 +343,84 @@ def cli():
     Setup the command line interface. run 'remover.py -h' for help.
     '''
 
-    parser = argparse.ArgumentParser(   \
-        description='''A script to remove patterns contained in environments from a file''',    \
-        epilog='''For example, in LaTeX, to delete all 'center' environments with the string \LaTeX, call `$remover.py generic patterns.txt input.tex output.tex -b '\\begin{center}' -e '\\end{center}'` where patterns.txt contains the line `\LaTeX`.''')
+    parser = argparse.ArgumentParser(   
+            prog='whiteout',
+            description='''A script to remove patterns in text environments''',    
+            epilog='''E.g., in LaTeX, to delete all 'center' environments with 
+                the string \LaTeX, call `$remover.py generic patterns.txt 
+                input.tex output.tex -b '\\begin{center}' -e '\\end{center}'` 
+                where patterns.txt contains the line `\LaTeX`.''')
   
     subparsers = parser.add_subparsers(help='Available actions')
    
     # Setup the generic deleting tool
-    parser_generic = subparsers.add_parser('generic',   \
+    parser_generic = subparsers.add_parser('generic',   
             help='delete ascii patterns in any file')
     parser_generic.set_defaults(func=deleteGeneric)
     
     # Setup the deleteTextFromPDF command
-    parser_pdf = subparsers.add_parser('pdf', \
+    parser_pdf = subparsers.add_parser(
+            'pdf', 
             help='delete text patterns from a pdf, by default ascii')
     parser_pdf.set_defaults(func=deleteTextFromPDF)
-    parser_pdf.add_argument('-f','--format',choices=list(INT_ENCODINGS),action='extend',nargs='+',default=['c'],  \
-            help='Try deleting the search pattern in any of the integer encodings in Python\'s \'Format Specification Mini-Language\' in addition to ascii')
-    parser_pdf.add_argument('-F','--all-formats',dest='format',action='store_const',const=list(INT_ENCODINGS),\
+    parser_pdf.add_argument(
+            '-f', '--format', action='append', nargs='+', 
+            choices=list(INT_ENCODINGS), default=['c'],
+            help='Try deleting the search pattern in any of the integer' 
+                'encodings in Python\'s \'Format Specification Mini-Language\''
+                'in addition to ascii')
+    parser_pdf.add_argument(
+            '-F', '--all-formats', dest='format',
+            action='store_const', const=list(INT_ENCODINGS),
             help='Overrides --format and tries all available formats')
-    parser_pdf.add_argument('-B','--brute-force',action='store_true',    \
-            help='For non-ASCII text blocks in a pdf, uses pdftotext to read its contents, and removes them if they match the patterns')
+    parser_pdf.add_argument(
+            '-B', '--brute-force', action='store_true',    
+            help='For non-ASCII text blocks in a pdf, uses pdftotext to read'
+                'its contents, and removes them if they match the patterns')
 
 
     # Main arguments
-    parser.add_argument('patterns', type=argparse.FileType('rb'), \
+    parser.add_argument(
+            'patterns', type=argparse.FileType('rb'), 
             help='enter the name of path of a text file with lines to remove')
-    parser.add_argument('input',type=argparse.FileType('rb'),   \
+    parser.add_argument(
+            'input', type=argparse.FileType('rb'),   
             help='enter the name or path of a pdf')
-    parser.add_argument('output',type=str,  \
+    parser.add_argument(
+            '-o', '--output',
             help='enter the name or path to write to')
-    parser.add_argument('-s','--show_indices',action='store_true',  \
+    parser.add_argument(
+            '-s', '--show_indices', action='store_true',  
             help='print all of the matched indices')
-    parser.add_argument('-k','--keep-nested',action='store_true',   \
-            help='this changes the default behavior so that nested environments which have no matches, but are contained in a matched environment, aren\'t removed')
-    parser.add_argument('-v','--verbose',action='store_true',   \
+    parser.add_argument(
+            '-k', '--keep-nested', action='store_true',   
+            help='this changes the default behavior so that nested'
+                ' environments which have no matches, but are contained in a'
+                ' matched environment, aren\'t removed')
+    parser.add_argument('-v', '--verbose', action='store_true',   
             help='print information about the match results')
 
     def mybytes(string):
         return bytes(string,'utf-8')
-    parser.add_argument('-b','--beg-env',default=b'^\d+ 0 obj',type=mybytes, \
-            help='string or python regexp to match the beginning of a text block containing the main pattern')
-    parser.add_argument('-e','--end-env',default=b'^endobj',type=mybytes, \
-            help='string or python regexp to match the beginning of a text block containing the main pattern')
+    parser.add_argument(
+            '-b', '--beg-env',
+            type=mybytes, default=b'^\d+ 0 obj',
+            help='string or python regexp to match the beginning of a text'
+                ' block containing the main pattern')
+    parser.add_argument(
+            '-e', '--end-env',
+            type=mybytes, default=b'^endobj',
+            help='string or python regexp to match the beginning of a text'
+                ' block containing the main pattern')
     
     args = parser.parse_args()
 
+    args = filenames.getSafeArgsOutput(args,mode='wb')
+
     args.func(args)
+
+    args.input.close()
+    args.output.close()
 
     return
 

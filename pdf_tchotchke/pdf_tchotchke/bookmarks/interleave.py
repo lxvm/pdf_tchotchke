@@ -7,7 +7,7 @@
 
 import argparse
 
-from pdftools.utils import filenames
+from ..utils import filenames
 
 def interleave(lines):
     '''
@@ -39,36 +39,46 @@ def interleave(lines):
     # perform the permutations (entries alternate with numbers)
     for i,_ in enumerate(lines):
         if i % 2 == 0:
-            output.append(lines[entry_indices[int(i/2)]] + "\n")
+            output.append(lines[entry_indices[int(i/2)]] + "   @" 
+                        + lines[num_indices[int(i/2)]] + "\n")
         else:
-            output.append(lines[num_indices[int((i-1)/2)]] + "\n")
-            
+           continue
+
     return output
 
 
 def cli():
     '''
-    This handles the input and output and command line arguments for interleaving.py
+    This handles the command line arguments for interleaving.py
     '''
     
     #define command line arguments
-    parser = argparse.ArgumentParser(   \
+    parser = argparse.ArgumentParser(   
+            prog="interleave",
             description='''a script to interleave lines''')
 
-    parser.add_argument("-i","--input", \
+    parser.add_argument(
+            "input", type=argparse.FileType('r'),
             help="input file name")
-    parser.add_argument("-o","--output",    \
+    parser.add_argument(
+            "-o", "--output", 
             help="output file name")
 
     args = parser.parse_args()  
 
     print("interleave.py - a script to interleave lines\n")
+    
+    args = filenames.getSafeArgsOutput(args, ext='.txt', 
+                                    overwrite=False, mode='w')
 
-    filenames.fileOperateList(interleave,   \
-        readfile=args.input, writefile=args.output,   \
-        readext=".txt",writeext=".txt")
+    for line in interleave(args.input.readlines()):
+        args.output.write(line)
+
+    args.input.close()
+    args.output.close()
     
     print("Lines interleaved")
+
     return
 
 if __name__ == "__main__":

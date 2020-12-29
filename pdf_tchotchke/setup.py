@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Setup for pdf_tchotchke
 
@@ -5,17 +6,12 @@ Based on:
 https://github.com/pypa/sampleproject
 '''
 
-from os.path import abspath, dirname
 from setuptools import setup, find_packages
-
-# Import description from README
-long_description = open(dirname(abspath(__file__))+'/README.md','r').read()
 
 setup(
     name='pdf_tchotchke',
-    version='0',
+    version='0.0',
     description='PDF bookmark and redaction tools',
-    long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/lord-zo/misc/',
     author='Lorenzo X. Van Muñoz',
@@ -28,18 +24,21 @@ setup(
         'Programming Language :: Python :: 3 :: Only'
     ],
     keywords='pdf, bookmarks, redaction',
-    package_dir={'': 'src'},
-    packages=find_packages(
-        where='src', 
-        include=['bookmarks', 'utils', 'redaction']),
-    install_requires=['pdfrw'],
-    python_requires='~=3.9',
+    packages=find_packages(),
+    # which is short-hand for
+    #packages=[
+    #    'pdf_tchotchke',
+    #    'pdf_tchotchke/utils', 
+    #    'pdf_tchotchke/bookmarks', 
+    #    'pdf_tchotchke/redaction'],
+    #install_requires=['pdfrw'],
+    python_requires='>=3.7.3',
     entry_points={
         'console_scripts': [
-            'bkmk=bookmarks:main_bkmk',
-            'interleave=bookmarks:main_interleave',
-            'redact=redaction:main_redact',
-            'whiteout=redaction:main_whiteout'
-            ],
+            'bkmk=pdf_tchotchke.bookmarks.bkmk:cli',
+            'interleave=pdf_tchotchke.bookmarks.interleave:cli',
+            'redact=pdf_tchotchke.redaction.redact:cli',
+            'whiteout=pdf_tchotchke.redaction.whiteout:cli'
+            ]
         }
 )

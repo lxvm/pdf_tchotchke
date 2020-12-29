@@ -1,6 +1,7 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+*$py.class
 # Distribution / Packaging
 .Python
 build/
@@ -20,5 +21,6 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
-# swap files used by vim
-*.sw*
+# python3 -m venv env
+env/
+

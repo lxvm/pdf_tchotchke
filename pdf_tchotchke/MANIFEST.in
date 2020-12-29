@@ -1,7 +1,8 @@
-include pyproject.toml
+# Default files included in the source distribution:
+# https://packaging.python.org/guides/using-manifest-in/#using-manifest-in
 
-# Include the README
-include *.md
+# Include the shell scripts
+include scripts/*
 
-# Include the license file
-include LICENSE.txt
+# Include the examples
+recursive-include examples *

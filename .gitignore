@@ -1,0 +1,4 @@
+# empty folders?
+.empty/
+# Ignore vim swap files
+*.sw*

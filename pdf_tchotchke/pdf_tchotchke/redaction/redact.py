@@ -59,7 +59,7 @@ import logging
 import argparse 
 import subprocess
 
-import pdfrw
+#import pdfrw
 
 from ..utils import filenames
 
@@ -178,7 +178,8 @@ def cli():
     '''
 
     parser = argparse.ArgumentParser(   
-        description='''A script to remove objects in a pdf''')
+            prog='redact',
+            description='''A script to remove objects in a pdf''')
   
     subparsers = parser.add_subparsers(help='redaction method')
    
@@ -244,24 +245,16 @@ def cli():
             help = 'Verbosity, up to 4 levels by repeating v: '
                     'ERROR=1, WARN=2, INFO=3, DEBUG=4')
     parser.add_argument(    
-            'input',    
-            type=argparse.FileType('rb'),   
+            'input', type=argparse.FileType('rb'),   
             help = 'enter the name or path of a pdf')
     parser.add_argument(    
-            # optional argument, uses input filename if an output not given
-            'output',   
-            nargs='?',  
+            '-o', 'output', 
             help = 'enter the name or path of pdf to write to')
     
     args = parser.parse_args()
     
-    # create a safe output file object if a name is given or not
-    if args.output == None:
-        args.output = open(filenames.fileOut(
-            writefile=args.input.name,ext='.pdf'),'wb')
-    else:
-        args.output = open(filenames.fileOut(
-            writefile=args.output,ext='.pdf'),'wb')
+    args = filenames.getSafeArgsOutput(args, ext='.pdf', 
+                                    overwrite=False, mode='wb')
 
     # under development: check types in those being implemented
     if args.func == cli_delete_pdf_search:
@@ -272,6 +265,9 @@ def cli():
     logging.basicConfig(level=LOG_LEVELS[args.verbosity])
     logger = logging.getLogger('redact')
     args.func(args)
+
+    args.input.close()
+    args.output.close()
 
     return
 

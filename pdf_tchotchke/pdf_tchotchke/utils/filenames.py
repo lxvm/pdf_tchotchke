@@ -56,7 +56,7 @@ def appendExt(filename,ext=""):
     return filename
 
 
-def getSafePath(chosenname,overwrite=False):
+def getSafePath(chosenname, overwrite=False):
     '''
     Creates a file name in the current directory which won't overwrite any existing files.
 
@@ -111,7 +111,7 @@ def readSafe(filename):
         raise FileNotFoundError(f"\"{filename}\" is not a valid file name or does not exist")
 
 
-def writeSafe(filename,overwrite=False):
+def writeSafe(filename, overwrite=False):
     '''
     Checks that a filename is safe to write to, or supplies one
 
@@ -126,7 +126,7 @@ def writeSafe(filename,overwrite=False):
     filename = os.path.abspath(filename) 
     # If output file name already exists, choose a backup so as not to overwrite
     if checkExists(filename):
-        filename = getSafePath(filename,overwrite)
+        filename = getSafePath(filename, overwrite)
     # Check for write permissions in output directory
     elif not os.access((os.path.dirname(filename)),os.W_OK):
         raise PermissionError(f"{os.path.dirname(filename)} is not a writable directory")
@@ -152,7 +152,7 @@ def fileIn(readfile="",ext=""):
         if not bool(filename):
             filename = input("Enter name of or path to the file to read > ")
         # Check the filename and return the absolute path
-        return readSafe(appendExt(filename,ext))
+        return readSafe(appendExt(filename, ext))
 
 
 def fileOut(writefile="",ext="",overwrite=False):
@@ -174,7 +174,7 @@ def fileOut(writefile="",ext="",overwrite=False):
     # validate and return path while appending extension
     return writeSafe(appendExt(filename,ext),overwrite)
 
-def fileIO(readfile="",writefile=None,readext="",writeext="",overwrite=False):
+def fileIO(readfile="", writefile=None, readext="", writeext="", overwrite=False):
     '''
     This function interactively asks for an input file name, an output file name, and does some sanity checks.
     It comes with several optional arguments, allowing it simply to check for the validity of given file names instead of asking for new ones.
@@ -191,10 +191,11 @@ def fileIO(readfile="",writefile=None,readext="",writeext="",overwrite=False):
     # support autocompletion of output file name given input name
     if writefile == None:
         writefile = readfile
-    return (fileIn(readfile,readext),fileOut(writefile,writeext,overwrite))
+    return (fileIn(readfile, readext), fileOut(writefile, writeext, overwrite))
 
 
-def fileOperate(function,readfile="",writefile=None,readext="",writeext="",readmode="r",writemode="w",overwrite=False,*args,**kwargs):
+def fileOperate(function, readfile="", writefile=None, readext="", writeext="",
+        readmode="r", writemode="w", overwrite=False, *args, **kwargs):
     '''
     Accepts a function and input/output files, and applies the function to the input, writing the results to the output
     
@@ -207,56 +208,88 @@ def fileOperate(function,readfile="",writefile=None,readext="",writeext="",readm
         String : filename to write to
         String : extension for the input file
         String : extension for the output file
-        String : specify reading mode [for helptype help(open) at python interpreter] (defaults to text, can specify bytes with 'rb')
+        String : specify reading mode [for help type help(open) at python 
+                 interpreter] (defaults to text, can specify bytes with 'rb')
         String : specify writing mode (defaults to text, can specify bytes with 'wb')
 
     Returns:
         None, though it will write a new file according to "writefile"
     '''
 
-    readfile,writefile = fileIO(readfile,writefile,readext,writeext,overwrite)
+    readfile, writefile = fileIO(readfile, writefile,
+                                    readext, writeext, overwrite)
     
-    data = open(readfile,readmode).read()
+    data = open(readfile, readmode).read()
 
-    output = function(data,*args,**kwargs)
+    output = function(data, *args, **kwargs)
     assert type(output) == str
 
-    open(writefile,writemode).write(output)
+    open(writefile, writemode).write(output)
 
     return
 
 
-def fileOperateList(function,readfile="",writefile="",readext="",writeext="",readmode="r",writemode="w",overwrite=False,*args,**kwargs):
+def fileOperateList(function, readfile="", writefile="", readext="", writeext="",
+        readmode="r", writemode="w", overwrite=False, *args, **kwargs):
     '''
-    Same as fileOperate but calls the readlines() and writelines() methods, so the function here has to expect a list-of-lines input and return one
+    Same as fileOperate but calls the readlines() and writelines() methods, so 
+    the function here has to expect a list-of-lines input and return one
     '''
 
-    readfile,writefile = fileIO(readfile,writefile,readext,writeext,overwrite)
+    readfile, writefile = fileIO(readfile, writefile,
+                                    readext, writeext, overwrite)
     
-    data = open(readfile,readmode).readlines()
+    data = open(readfile, readmode).readlines()
 
-    output = function(data,*args,**kwargs)
+    output = function(data, *args, **kwargs)
     assert type(output) == list
 
-    open(writefile,writemode).writelines(output)
+    open(writefile, writemode).writelines(output)
 
     return
 
 
-def fileOperateLine(function,readfile="",writefile="",readext="",writeext="",readmode="r",writemode="w",overwrite=False,*args,**kwargs):
+def fileOperateLine(function, readfile="", writefile="", readext="", writeext="",
+        readmode="r", writemode="w", overwrite=False, *args, **kwargs):
     '''
-    Same as fileOperate gives the file object to the function (intent here is to use f.readline() so the file never has to be loaded in alltogether) and returns an iterable with the contents to write to file (e.g list)
+    Same as fileOperate gives the file object to the function (intent here is 
+    to use f.readline() so the file never has to be loaded in alltogether) and 
+    returns an iterable with the contents to write to file (e.g list)
     '''
 
-    readfile,writefile = fileIO(readfile,writefile,readext,writeext,overwrite)
+    readfile, writefile = fileIO(readfile, writefile,
+                                  readext, writeext, overwrite)
     
-    with open(readfile,readmode) as f:
-        output = function(f,*args,**kwargs)
+    with open(readfile, readmode) as f:
+        output = function(f, *args, **kwargs)
 
-    open(writefile,writemode).writelines(output)
+    open(writefile, writemode).writelines(output)
     
     return
+
+def getSafeArgsOutput(args, ext='', overwrite=False, mode='w'):
+    '''
+    This accepts an object (presumably arguments from an argument parser) with
+    input and output attributes. It assumes that the input is a file object and
+    that the output is either string or None. It returns the arguments object
+    after giving it a safely name output file. Additional keyword arguments 
+    include a string file extension, a boolean indicating whether to overwrite 
+    any files, and a write mode (a string such as 'w'[default],'wb','w+').
+    '''
     
+    # create a safe output file object if a name is given or not.
+    # note that if no output name is given and overwrite is true,
+    # then the args.input file will be overwritten, but the original will still
+    # be available to the program since it is already in memory
+    if args.output == None:
+        args.output = open(fileOut(writefile=args.input.name, 
+            ext=ext, overwrite=overwrite), mode)
+    else:
+        args.output = open(fileOut(writefile=args.output,
+            ext=ext, overwrite=overwrite), mode)
+    
+    return args
+
 
 # Begin module test
 if __name__ == "__main__":
