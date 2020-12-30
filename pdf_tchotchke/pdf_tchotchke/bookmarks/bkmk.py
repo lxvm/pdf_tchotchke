@@ -37,7 +37,7 @@ import re
 import argparse
 import subprocess
 
-from ..utils import filenames
+from pdf_tchotchke.utils import filenames
 
 # Global variable define available re flags
 RE_FLAGS = {
@@ -191,7 +191,7 @@ def getCPDFIndexFromTitle(title_list):
     keywords = ['Chapter', 'chapter', 'Capítulo', 'capítulo', 
                 'Appendix', 'appendix', 'Apéndice', 'apéndice']
 
-    # start indexing at 1 to see if it is a subsection
+    # start indexing
     indices = [1 for e in title_list]
     for i,title in enumerate(title_list):
         # This enforces no empty lines as well as getting index
@@ -526,7 +526,7 @@ def cli():
             "input", type=argparse.FileType('r'),
             help="input file name")
     parser.add_argument(
-            "-o", "--output",
+            "-o", dest="output",
             help="output file name")
 
     args = parser.parse_args()  

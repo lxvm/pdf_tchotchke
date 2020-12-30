@@ -17,7 +17,7 @@ import argparse
 import difflib
 import subprocess
 
-from ..utils import filenames 
+from pdf_tchotchke.utils import filenames 
 
 # Global variables
 # Define available encodings of byte-strings with format specification mini-language
@@ -364,17 +364,17 @@ def cli():
             help='delete text patterns from a pdf, by default ascii')
     parser_pdf.set_defaults(func=deleteTextFromPDF)
     parser_pdf.add_argument(
-            '-f', '--format', action='append', nargs='+', 
+            '-f', dest='format', action='append', nargs='+', 
             choices=list(INT_ENCODINGS), default=['c'],
             help='Try deleting the search pattern in any of the integer' 
                 'encodings in Python\'s \'Format Specification Mini-Language\''
                 'in addition to ascii')
     parser_pdf.add_argument(
-            '-F', '--all-formats', dest='format',
+            '-F', dest='format',
             action='store_const', const=list(INT_ENCODINGS),
             help='Overrides --format and tries all available formats')
     parser_pdf.add_argument(
-            '-B', '--brute-force', action='store_true',    
+            '-B', dest='brute-force', action='store_true',    
             help='For non-ASCII text blocks in a pdf, uses pdftotext to read'
                 'its contents, and removes them if they match the patterns')
 
@@ -387,28 +387,28 @@ def cli():
             'input', type=argparse.FileType('rb'),   
             help='enter the name or path of a pdf')
     parser.add_argument(
-            '-o', '--output',
+            '-o', dest='output',
             help='enter the name or path to write to')
     parser.add_argument(
-            '-s', '--show_indices', action='store_true',  
+            '-s', dest='show_indices', action='store_true',  
             help='print all of the matched indices')
     parser.add_argument(
-            '-k', '--keep-nested', action='store_true',   
+            '-k', dest='keep-nested', action='store_true',   
             help='this changes the default behavior so that nested'
                 ' environments which have no matches, but are contained in a'
                 ' matched environment, aren\'t removed')
-    parser.add_argument('-v', '--verbose', action='store_true',   
+    parser.add_argument('-v', dest='verbose', action='store_true',   
             help='print information about the match results')
 
     def mybytes(string):
         return bytes(string,'utf-8')
     parser.add_argument(
-            '-b', '--beg-env',
+            '-b', dest='beg-env',
             type=mybytes, default=b'^\d+ 0 obj',
             help='string or python regexp to match the beginning of a text'
                 ' block containing the main pattern')
     parser.add_argument(
-            '-e', '--end-env',
+            '-e', dest='end-env',
             type=mybytes, default=b'^endobj',
             help='string or python regexp to match the beginning of a text'
                 ' block containing the main pattern')

@@ -7,7 +7,7 @@
 
 import argparse
 
-from ..utils import filenames
+from pdf_tchotchke.utils import filenames
 
 def interleave(lines):
     '''
@@ -61,7 +61,7 @@ def cli():
             "input", type=argparse.FileType('r'),
             help="input file name")
     parser.add_argument(
-            "-o", "--output", 
+            "-o", dest="output", 
             help="output file name")
 
     args = parser.parse_args()  

@@ -2,7 +2,6 @@
 Why? To make navigating pdf textbooks as easy as real ones.
 
 ## Summary
-- `filenames.py`: A tiny python module for filename handling and file reading. It will import if on `PYTHONPATH`.
 - `interleaving.py`: A python script for interleaving/alternating lines matching certain TOC patterns. It will run if on `PATH`.
 - `bkmk.py`: A python script for converting a TOC into a bookmarks file for one of several command-line utilities. It will run if on `PATH`.
 
@@ -12,21 +11,24 @@ See the examples directory for some examples of how the output of these modules.
 ## Basic Usage
 
 ```
-$ bkmk.py -h
-usage: bkmk.py [-h] {convert,create} ... {cpdf,gs,pdftk} input output
+$ bkmk -h
+usage: bkmk [-h] [-o OUTPUT] {convert,create,import} ... {cpdf,gs,pdftk} input
 
 a script to produce pdf bookmarks
 
 positional arguments:
-  {convert,create}  action!
-    convert         change a bookmark file syntax or renumber the pages
-    create          create bookmarks from a raw TOC file
-  {cpdf,gs,pdftk}   choose bookmark output format
-  input             input file name
-  output            output file name
+  {convert,create,import}
+                        action!
+    convert             change a bookmark file syntax or renumber the pages
+    create              create bookmarks from a raw TOC file
+    import              read in a pdf to get a rough TOC that will need
+                        inspection
+  {cpdf,gs,pdftk}       choose bookmark output format
+  input                 input file name
 
 optional arguments:
-  -h, --help        show this help message and exit
+  -h, --help            show this help message and exit
+  -o OUTPUT             output file name
 ```
 
 ## Depends
@@ -151,15 +153,9 @@ They may be useful for additional tasks.
 For a general discussion of pdf bookmarks, see [this](https://superuser.com/questions/276311/how-to-import-export-and-edit-bookmarks-of-a-pdf-file).
 
 Others have done [similar work](https://github.com/goerz/bmconverter.py) that is a different implementation using classes.
+In addition, see [`booky`](https://github.com/SiddharthPant/booky/blob/master/booky.py).
 
 Text extraction from pdfs is a difficult task which others have done already.
 [PDFBox](https://pdfbox.apache.org/index.html), written in Java, can do all of these [things](https://www.tutorialkart.com/apache-pdfbox-tutorial/).
 The [Text Extraction Toolkit (TET)](https://www.pdflib.com/products/tet/) is an expensive software, but is apparently very good at its task.
 
-## Redaction
-
-Redaction is removing text in a document.
-
-There are some python tools out there for this such as [`pdf-redactor`](https://github.com/JoshData/pdf-redactor).
-
-There are plenty of people who want [this ability](https://stackoverflow.com/questions/52346942/how-to-replace-delete-text-from-a-pdf-using-python/57483809) but the efficiency of various implementations is questionable.

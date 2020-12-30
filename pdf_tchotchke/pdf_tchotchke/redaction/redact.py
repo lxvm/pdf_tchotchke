@@ -64,7 +64,7 @@ import subprocess
 
 #import pdfrw
 
-from ..utils import filenames
+from pdf_tchotchke.utils import filenames
 
 # Define Global variables    
 PDF_STR_ENCODINGS = {
@@ -354,15 +354,15 @@ def cli():
             choices=['delete','info'],
             help = 'red\'actions\'')
     parser.add_argument(    
-            '-v', '--verbose',  
-            dest='verbosity', action='count', default = 0,  
+            '-v', dest='verbosity', 
+            action='count', default = 0,  
             help = 'Verbosity, up to 4 levels by repeating v: '
                     'ERROR=1, WARN=2, INFO=3, DEBUG=4')
     parser.add_argument(    
             'input', type=argparse.FileType('rb'),   
             help = 'enter the name or path of a pdf')
     parser.add_argument(    
-            '-o', 'output', 
+            '-o', dest='output', 
             help = 'enter the name or path of pdf to write to')
     
     args = parser.parse_args()
