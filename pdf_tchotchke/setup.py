@@ -12,6 +12,7 @@ setup(
     name='pdf_tchotchke',
     version='0.0',
     description='PDF bookmark and redaction tools',
+    long_description=open('./README.md','r').read(),
     long_description_content_type='text/markdown',
     url='https://github.com/lord-zo/misc/',
     author='Lorenzo X. Van Muñoz',
@@ -25,20 +26,14 @@ setup(
     ],
     keywords='pdf, bookmarks, redaction',
     packages=find_packages(),
-    # which is short-hand for
-    #packages=[
-    #    'pdf_tchotchke',
-    #    'pdf_tchotchke/utils', 
-    #    'pdf_tchotchke/bookmarks', 
-    #    'pdf_tchotchke/redaction'],
-    #install_requires=['pdfrw'],
     python_requires='>=3.7.3',
     entry_points={
         'console_scripts': [
             'bkmk=pdf_tchotchke.bookmarks.bkmk:cli',
             'interleave=pdf_tchotchke.bookmarks.interleave:cli',
             'redact=pdf_tchotchke.redaction.redact:cli',
-            'whiteout=pdf_tchotchke.redaction.whiteout:cli'
+            'whiteout=pdf_tchotchke.redaction.whiteout:cli',
+            'prepare=pdf_tchotchke.redaction.prepare:cli',
             ]
         }
 )

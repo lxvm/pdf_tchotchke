@@ -191,8 +191,8 @@ def getCPDFIndexFromTitle(title_list):
     keywords = ['Chapter', 'chapter', 'Capítulo', 'capítulo', 
                 'Appendix', 'appendix', 'Apéndice', 'apéndice']
 
-    # start indexing
-    indices = [0 for e in title_list]
+    # start indexing at 1 to see if it is a subsection
+    indices = [1 for e in title_list]
     for i,title in enumerate(title_list):
         # This enforces no empty lines as well as getting index
         while bool(re.match("^\w+" + indices[i] * "\.[0-9]+",title)):
@@ -361,21 +361,24 @@ def importPDFTOC(args):
     This function takes in a file object and returns a string whose contents are
     the TOC to review
     '''
-    
-    f_page = int(input('Provide the pdf page number of the start of the TOC> '))
-    l_page = int(input('Provide the pdf page number of the end of the TOC> '))
-    
-    # For most books I'm bound to use, Latin1 is a sufficient 
-    # character set. Sometimes UTF-8 is too large and pdftotext
-    # produces homoglyphs which I don't want
-    subprocess.run(['pdftotext', '-f', str(f_page), '-l', str(l_page), 
-                    '-layout', '-nopgbrk', '-enc', 'Latin1',
-                    args.input.name, 'tmp_bkmk.txt'])
-    
-    with open('tmp_bkmk.txt','r',encoding='latin1') as f:
-        toc = f.read()
-    os.remove('tmp_bkmk.txt')
-    # begin routine mainpulations
+    if args.pdftotext:
+        f_page = int(input('Provide the pdf page number of the start of the TOC> '))
+        l_page = int(input('Provide the pdf page number of the end of the TOC> '))
+        
+        # For most books I'm bound to use, Latin1 is a sufficient 
+        # character set. Sometimes UTF-8 is too large and pdftotext
+        # produces homoglyphs which I don't want
+        subprocess.run(['pdftotext', '-f', str(f_page), '-l', str(l_page), 
+                        '-layout', '-nopgbrk', '-enc', 'Latin1',
+                        args.input.name, 'tmp_bkmk.txt'])
+        
+        with open('tmp_bkmk.txt','r',encoding='latin1') as f:
+            toc = f.read()
+        os.remove('tmp_bkmk.txt')
+    else:
+        toc = args.input.read()
+
+    # begin routine manipulations
     # remove leading spaces
     toc = re.sub(r'\n[ \t]+', r'\n', toc)
     # remove instances of keywords or leading/trailing space
@@ -388,19 +391,19 @@ def importPDFTOC(args):
     # remove blank lines and trailing space
     toc = re.sub(r'[ \t]*\n[ \t]*\n*', r'\n', toc)
 
-    # merge split lines (e.g. those which don't 
-    # end with a number or numeral but have at
-    # least two words)
-    toc = re.sub(r'(\D+) (\D+[^xvi0-9])\n(.+) (\d+)\n', r'\1 \2 \3 \4\n', toc)
-
     # if the beginning of toc has roman numerals
     # replace those with 0 (these will be skipped 
     # by the create function when it comes to the 
     # correct numbering)
-    toc = re.sub(r'[xvi]+\n',r'0\n',toc)
+    toc = re.sub(r' [xvi]+\n',r' 0\n',toc)
 
     # add an @ before each page number at EOL
-    toc = re.sub(r'(\d+)\n',r'@\1\n',toc)
+    toc = re.sub(r' (\d+)\n',r' @\1\n',toc)
+
+    # merge split lines (e.g. those which don't 
+    # end with a number or numeral but have at
+    # least two words)
+    toc = re.sub(r'(\D+) (\D+[^xvi0-9])\n(.+) (\d+)\n', r'\1 \2 \3 \4\n', toc)
 
     # May need to escape quotations? " -> \"
 
@@ -497,6 +500,9 @@ def cli():
             "import",
             help="read in a pdf to get a rough TOC that will need inspection")
     parser_import.set_defaults(func=importPDFTOC)
+    parser_import.add_argument(
+            "-pdf", "--pdftotext", action="store_true",
+            help="instead of reading in a raw TOC, read it from pdf with pdftotext")
     parser_import.add_argument(
             "-y", "--yolo", action="store_true",
             help="pass the imported bkmk to create without revision")

@@ -4,7 +4,7 @@ A script is worth a thousand functions
 
 ## PDF Tchotchke
 
-Baubles for your pdfs
+Baubles for pdfs
 
 ### Installation
 
@@ -31,5 +31,6 @@ The main contents of this package are the following command-line scripts:
 - `interleave`: a helper script for `bkmk`
 - `whiteout`: a script that whites-out specific text objects in a pdf
 - `redact`: a script that deletes objects from pdfs
+- `prepare`: a script to automate redaction
 
 For more details, see the README's herein.

@@ -295,9 +295,9 @@ def deleteGeneric(args):
     with args.patterns as p:
         text_patterns = [ e.strip() for e in p ]
     with args.input as f:
-        search_env_matches,env_matches,search_results =  
-                findEnvAndMatchRanges(f,text_patterns,  
-                args.format,args.beg_env,args.end_env)
+        search_env_matches,env_matches,search_results = findEnvAndMatchRanges(
+                f, text_patterns,  
+                args.format, args.beg_env, args.end_env)
 
         all_matched_indices = set()
         for rng in search_env_matches:
