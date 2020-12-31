@@ -5,7 +5,7 @@
 # It is a wrapper for the builtin os module to make file reading
 # and writing easy and reliable
 # Written by Lorenzo Van Muñoz
-# Last Updated Dec 21 2020
+# Last Updated Dec 30 2020
 
 # Features safe writing to file by modifying file name,
 # verifies readability/writability for requested paths,
@@ -269,7 +269,7 @@ def fileOperateLine(function, readfile="", writefile="", readext="", writeext=""
 
 def getSafeArgsOutput(args, ext='', overwrite=False, mode='w'):
     '''
-    This accepts an object (presumably arguments from an argument parser) with
+    This accepts a Namespace object (presumably arguments from an argument parser) with
     input and output attributes. It assumes that the input is a file object and
     that the output is either string or None. It returns the arguments object
     after giving it a safely name output file. Additional keyword arguments 
