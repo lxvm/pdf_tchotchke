@@ -35,7 +35,8 @@ Have fun and work fast!
 import os
 import re
 import argparse
-import subprocess
+
+import pdftotext 
 
 from pdf_tchotchke.utils import filenames
 
@@ -83,7 +84,6 @@ def whichSyntax(data):
     Returns:
         String or Error : "cpdf" or "gs" syntax, None if not any syntax
     '''
-
     for e in list(BKMK_SYNTAX):
         if bool(re.search(BKMK_SYNTAX[e]["sense"],data)):
             return e
@@ -101,7 +101,6 @@ def convertSyntax(data,output_syntax=None,offset=0):
     But maybe just do this for completeness.
     This can also renumber the pages by the given offset
     '''
-
     input_syntax = whichSyntax(data)
     if output_syntax == None:
         output_syntax = input_syntax
@@ -133,7 +132,6 @@ def createTocFromText(data, output_syntax=None,
     Return:
         String : the finalized bookmark entries
     '''
-    
     if output_syntax == None:
         raise UserWarning('No output syntax has been specified. Aborting!')
     # check that given re has only the required fields
@@ -243,7 +241,6 @@ def writeBkmkFile(output_syntax,titles, pages, indices,index_input_syntax=""):
     I was doing this over 5 times in the code so decided to centralize it
     This takes in lists with the titles, pages, indices, and exports a string in the requested format
     '''
-
     bkmks = ""
     for i,_ in enumerate(indices):
         bkmks +=  BKMK_SYNTAX[output_syntax]["print"](    
@@ -269,7 +266,6 @@ def repairIndex(bkmks, index_input_syntax):
     Returns:
         String  :   The finalized bookmark file
     '''
-
     output_syntax = whichSyntax(bkmks)
 
     if output_syntax == index_input_syntax:
@@ -365,16 +361,8 @@ def importPDFTOC(args):
         f_page = int(input('Provide the pdf page number of the start of the TOC> '))
         l_page = int(input('Provide the pdf page number of the end of the TOC> '))
         
-        # For most books I'm bound to use, Latin1 is a sufficient 
-        # character set. Sometimes UTF-8 is too large and pdftotext
-        # produces homoglyphs which I don't want
-        subprocess.run(['pdftotext', '-f', str(f_page), '-l', str(l_page), 
-                        '-layout', '-nopgbrk', '-enc', 'Latin1',
-                        args.input.name, 'tmp_bkmk.txt'])
-        
-        with open('tmp_bkmk.txt','r',encoding='latin1') as f:
-            toc = f.read()
-        os.remove('tmp_bkmk.txt')
+        pdf = pdftotext.PDF(args.input)
+        toc = ''.join([pdf[i] for i in range(f_page-1,l_page)])
     else:
         toc = args.input.read()
 

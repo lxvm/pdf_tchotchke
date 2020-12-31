@@ -19,8 +19,11 @@ Alternatively, use a [`venv`](https://docs.python.org/3/library/venv.html).
 Either way, check that the `bin` folder installation directory is on your `PATH`.
 This will make the scripts available to run from the command line.
 
-Some of the functions rely on an installation of `pdftotext`.
-This is a package from `poppler-utils`, available through most package managers.
+Some of the functions rely on an installation of `pdftotext`, a python package
+based on the poppler library.
+Though the package will be installed along with this one, `pdftotext` has some
+system requirements that you must install with it.
+Instructions [here](https://github.com/jalan/pdftotext).
 
 This package has only been tested on Debian.
 

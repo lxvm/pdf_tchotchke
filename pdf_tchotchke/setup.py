@@ -26,6 +26,7 @@ setup(
     ],
     keywords='pdf, bookmarks, redaction',
     packages=find_packages(),
+    requires=['pdftotext'],
     python_requires='>=3.7.3',
     entry_points={
         'console_scripts': [
