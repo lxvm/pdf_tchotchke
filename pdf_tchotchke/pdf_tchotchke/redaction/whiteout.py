@@ -31,7 +31,7 @@ INT_ENCODINGS = {
         }
 
 # Begin text manipulations
-def findEnvAndMatchRanges(f, text_patterns, formats, beg_env, end_env):
+def findEnvAndMatchRanges(og_file, text_patterns, formats, beg_env, end_env):
     '''
     Searches for environments (including nested ones) and returns ranges of their indices in the file.
     If any of those environments contains a match with any of the patterns in any of the formats, these ranges are returned separately so they can be deleted.
@@ -69,7 +69,7 @@ def findEnvAndMatchRanges(f, text_patterns, formats, beg_env, end_env):
     beg_env_indices = []
     end_env_indices = []
 
-    for i, line in enumerate(f):
+    for i, line in enumerate(og_file):
         if bool(re.search(beg_pattern, line)):
             beg_env_indices.append([i, False])
         if bool(re.search(end_pattern, line)):
@@ -93,7 +93,7 @@ def findEnvAndMatchRanges(f, text_patterns, formats, beg_env, end_env):
     return matched_envs, unmatched_envs, match_results
 
 
-def findPDFMatchesBruteForce(f, text_patterns, env_matches):
+def findPDFMatchesBruteForce(f, text_patterns, env_matches, og_file=None):
     '''
     This processes the environments which weren't already matched by deleting them from the file, running pdftotext to see the difference with the original, 
     Arguments:
@@ -125,30 +125,31 @@ def findPDFMatchesBruteForce(f, text_patterns, env_matches):
     # initialize data collector
     brute_results = { 'c' : { e : 0  for e in text_patterns } }
     # compile re's as strings (output of pdftotext)
-    patterns = [re.compile(e.decode('utf-8')) for e in text_patterns]
+    patterns = [re.compile(''.join(e.decode('utf-8').split())) for e in text_patterns]
     
     # Using pdftotext python library to read text
     # all manipulations are done in memory so hopefull this is quick
     # produce original text
-    og_text = pdftotext.PDF(f)
+    og_text = pdftotext.PDF(f, raw=True)
     
     # remove text in each range once, one by one, checking for diffs in each page
-    f.seek(0)
-    pdf = f.readlines()
+    if not og_file:
+        f.seek(0)
+        og_file = f.readlines()
     tmp_pdf_file = filenames.fileOut(re.sub('.pdf','_tmp_whiteout.pdf',f.name))
     exists_text = re.compile(rb'[\(<].*?[\)>] *?Tj')
     for rng in env_matches:
         with open(tmp_pdf_file, 'w+b') as g:
             # if the rng has no text objects, skip it
-            if not exists_text.search(b''.join(pdf[rng.start : rng.stop])):
+            if not exists_text.search(b''.join(og_file[rng.start : rng.stop])):
                 brute_search_unmatched.append(rng)
                 continue
             g.writelines([replacePDFTextWithSpace(e) 
                             if i in rng else e 
-                            for i, e in enumerate(pdf)])
+                            for i, e in enumerate(og_file)])
             g.seek(0)
             try:
-                tmp_text = pdftotext.PDF(g)
+                tmp_text = pdftotext.PDF(g, raw=True)
             except pdftotext.Error as e:
                 print(f'Warning: pdftotext.Error: {e}')
                 brute_search_unmatched.append(rng)
@@ -160,6 +161,17 @@ def findPDFMatchesBruteForce(f, text_patterns, env_matches):
                                     patterns, brute_results):
                         brute_search_matches.append(rng)
                         is_match = True
+                        new_patterns = []
+                        for line in og_file[rng.start : rng.stop]:
+                            m = replacePDFTextWithSpace(line, just_match=True)
+                            if bool(m):
+                                new_patterns.append(m)
+                        new_ranges, _, new_results = findEnvAndMatchRanges(
+                                og_file, new_patterns, ['c'], 
+                                rb'^\d+ \d+ obj', rb'^endobj')
+                        [brute_search_matches.append(env_matches.pop(i))
+                            for i,r in enumerate(env_matches) if r in new_ranges]
+                        brute_results['c'].update(new_results['c'])
                         break
                     else:
                         pass
@@ -173,18 +185,23 @@ def findPDFMatchesBruteForce(f, text_patterns, env_matches):
     return (brute_search_matches, brute_search_unmatched, brute_results)
 
 
-def replacePDFTextWithSpace(line, count_del=None):
+def replacePDFTextWithSpace(line, count_del=None, just_match=False):
     '''
     This replaces the characters in a string with an equivalent number of spaces
     '''
     p = re.compile(b'^([\(<])(.*)([\)>] *Tj)$')
-    match = p.match(line)
-    if bool(match):
+    m = p.match(line)
+    if just_match:
+        if bool(m):
+            return m.group(2)
+        else:
+            return None
+    elif bool(m):
         # adding b' '*len(re.findall(b'\\\\\\\\', match.group('text'))) because sometimes I've seen lines with multiple backslashes and only these lines need an extra space because otherwise the pdf displays an empty box
         if bool(count_del):
             count_del[0] += 1
-        return b'\g<1>' + b' ' * len(re.findall(b'\\\\\\\\', b'\g<2>')) \
-                + re.sub(b'.', b' ', b'\g<2>') + b'\g<3>' + b'\n'
+        return m.group(1) + b' ' * len(re.findall(b'\\\\\\\\', m.group(2))) \
+                + re.sub(b'.', b' ', m.group(2)) + m.group(3) + b'\n'
 
     else:
         return line
@@ -230,9 +247,10 @@ def deleteTextFromPDF(pattern_file, input_file, output_file, formats,
     with pattern_file as p:
         text_patterns = list(set([e.strip() for e in p]))
     with input_file as f:
+        og_file = f.readlines()
         search_env_matches, env_matches, search_results = \
                 findEnvAndMatchRanges(
-                        f, text_patterns, formats, 
+                        og_file, text_patterns, formats, 
                         beg_env, end_env)
         all_matched_indices = set()
         [all_matched_indices.update(set(rng)) for rng in search_env_matches]
@@ -243,7 +261,8 @@ def deleteTextFromPDF(pattern_file, input_file, output_file, formats,
             print(f'Brute Force! {f.name}')
             f.seek(0)
             brute_search_matches, brute_search_unmatched, brute_results =   \
-                    findPDFMatchesBruteForce(f, text_patterns, env_matches)
+                    findPDFMatchesBruteForce(f, text_patterns, 
+                                                env_matches, og_file)
             # add the indices of the new matches
             [all_matched_indices.update(set(rng)) for rng in brute_search_matches]
             # remove the indices of new ranges that were matched
@@ -262,12 +281,12 @@ def deleteTextFromPDF(pattern_file, input_file, output_file, formats,
             print('Unmatched ranges:')
             print(search_env_matches)
 
+
         # write the final edited pdf
         with output_file as g:
-            f.seek(0)
             lines_removed = [0]
             # omit the matched lines when writing
-            for i, line in enumerate(f):
+            for i, line in enumerate(og_file):
                 if keep_nested:
                     if i in all_matched_indices and i not in all_unmatched_env_indices:
                         g.write(replacePDFTextWithSpace(line,
@@ -278,7 +297,6 @@ def deleteTextFromPDF(pattern_file, input_file, output_file, formats,
                 else:
                     g.write(line)
 
-
         if verbose:
             print(f'Generic results: {f.name}')
             printSearchDict(search_results)
@@ -286,7 +304,6 @@ def deleteTextFromPDF(pattern_file, input_file, output_file, formats,
                 print(f'With Brute Force: {f.name}')
                 printSearchDict(brute_results)
             print(f'Result: {lines_removed[0]} lines removed')
-
     return    
 
 
