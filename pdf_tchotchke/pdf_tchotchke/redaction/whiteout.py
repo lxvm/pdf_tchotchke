@@ -56,7 +56,7 @@ def findEnvAndMatchRanges(f, text_patterns, formats, beg_env, end_env):
     end_pattern = re.compile(end_env)
     # the patterns are read in as strings but they need to be in bytes to match
     # inside the pdfs
-    all_patterns = [[re.compile(INT_ENCODINGS[f](bytes(p, 'utf-8'))) 
+    all_patterns = [[re.compile(INT_ENCODINGS[f](p)) 
                         for p in text_patterns] for f in formats ]
     # we can infer the format based on the index of the group of the matched element in this list
 
@@ -68,7 +68,7 @@ def findEnvAndMatchRanges(f, text_patterns, formats, beg_env, end_env):
     # initialize search caches
     beg_env_indices = []
     end_env_indices = []
-    
+
     for i, line in enumerate(f):
         if bool(re.search(beg_pattern, line)):
             beg_env_indices.append([i, False])
@@ -82,22 +82,13 @@ def findEnvAndMatchRanges(f, text_patterns, formats, beg_env, end_env):
             beg_index, beg_bool = beg_env_indices.pop()
             end_index = end_env_indices.pop()
             if beg_bool:
-                # in the case of a pdf
-                if end_env in [b'^endobj', b'^ET']:
-                    matched_envs.append(range(  
-                            beg_index+1, end_index))
-                else:
-                    matched_envs.append(range(  
-                            beg_index, end_index+1))
+                matched_envs.append(range(  
+                        beg_index, end_index+1))
             else:
-                if end_env in [b'^endobj', b'^ET']:
-                    unmatched_envs.append(range(    
-                            beg_index+1, end_index))
-                else:
-                    unmatched_envs.append(range(    
-                            beg_index, end_index+1))
+                unmatched_envs.append(range(    
+                        beg_index, end_index+1))
     if bool(beg_env_indices) or bool(end_env_indices):
-        print('remover.py Warning: Environment beginnings and endings are mismatched: The input file may be damaged')
+        print('whiteout.py Warning: Environment beginnings and endings are mismatched: The input file may be damaged')
 
     return matched_envs, unmatched_envs, match_results
 
@@ -133,8 +124,8 @@ def findPDFMatchesBruteForce(f, text_patterns, env_matches):
     brute_search_unmatched = []
     # initialize data collector
     brute_results = { 'c' : { e : 0  for e in text_patterns } }
-    # compile re's
-    patterns = [re.compile(e) for e in text_patterns]
+    # compile re's as strings (output of pdftotext)
+    patterns = [re.compile(e.decode('utf-8')) for e in text_patterns]
     
     # Using pdftotext python library to read text
     # all manipulations are done in memory so hopefull this is quick
@@ -145,15 +136,23 @@ def findPDFMatchesBruteForce(f, text_patterns, env_matches):
     f.seek(0)
     pdf = f.readlines()
     tmp_pdf_file = filenames.fileOut(re.sub('.pdf','_tmp_whiteout.pdf',f.name))
-    with open(tmp_pdf_file, 'w+b') as g:
-        for rng in env_matches:
+    exists_text = re.compile(rb'[\(<].*?[\)>] *?Tj')
+    for rng in env_matches:
+        with open(tmp_pdf_file, 'w+b') as g:
+            # if the rng has no text objects, skip it
+            if not exists_text.search(b''.join(pdf[rng.start : rng.stop])):
+                brute_search_unmatched.append(rng)
+                continue
             g.writelines([replacePDFTextWithSpace(e) 
                             if i in rng else e 
                             for i, e in enumerate(pdf)])
             g.seek(0)
-            tmp_text = pdftotext.PDF(g)
-            g.truncate(0)
-            g.seek(0)
+            try:
+                tmp_text = pdftotext.PDF(g)
+            except pdftotext.Error as e:
+                print(f'Warning: pdftotext.Error: {e}')
+                brute_search_unmatched.append(rng)
+                continue
             try:
                 is_match = False
                 for i, page in enumerate(og_text):
@@ -166,7 +165,8 @@ def findPDFMatchesBruteForce(f, text_patterns, env_matches):
                         pass
                 if not is_match:
                     brute_search_unmatched.append(rng)
-            except:
+            except BaseException as e:
+                print(f'Warning: {e}')
                 brute_search_unmatched.append(rng)
     os.remove(tmp_pdf_file)
 
@@ -176,15 +176,16 @@ def findPDFMatchesBruteForce(f, text_patterns, env_matches):
 def replacePDFTextWithSpace(line, count_del=None):
     '''
     This replaces the characters in a string with an equivalent number of spaces
-    Optionally, pass count_del, a list with one number to count deletions
     '''
-    p = re.compile(b'^(?P<beg>[\(<])(?P<text>.*)(?P<end>[\)>] *Tj)$')
+    p = re.compile(b'^([\(<])(.*)([\)>] *Tj)$')
     match = p.match(line)
     if bool(match):
         # adding b' '*len(re.findall(b'\\\\\\\\', match.group('text'))) because sometimes I've seen lines with multiple backslashes and only these lines need an extra space because otherwise the pdf displays an empty box
         if bool(count_del):
             count_del[0] += 1
-        return match.group('beg') + b' ' * len(re.findall(b'\\\\\\\\', match.group('text'))) + re.sub(b'.', b' ', match.group('text')) + match.group('end') + b'\n'
+        return b'\g<1>' + b' ' * len(re.findall(b'\\\\\\\\', b'\g<2>')) \
+                + re.sub(b'.', b' ', b'\g<2>') + b'\g<3>' + b'\n'
+
     else:
         return line
 
@@ -224,7 +225,7 @@ def deleteTextFromPDF(pattern_file, input_file, output_file, formats,
     (the bool arguments should be recast with the logging module)
     '''
     # the only types of strings in pdfs are literal and hex strings
-    formats.intersection_update(set(['c','X','x']))
+    formats = [e for e in ['c','X','x'] if e in formats]
     # get the original text patterns to search, and separately those patterns in all requested encodings
     with pattern_file as p:
         text_patterns = list(set([e.strip() for e in p]))
@@ -233,16 +234,13 @@ def deleteTextFromPDF(pattern_file, input_file, output_file, formats,
                 findEnvAndMatchRanges(
                         f, text_patterns, formats, 
                         beg_env, end_env)
-
         all_matched_indices = set()
         [all_matched_indices.update(set(rng)) for rng in search_env_matches]
         all_unmatched_env_indices = set()
         [all_unmatched_env_indices.update(set(rng)) for rng in env_matches]
 
-        # Create regexp to substitute matched lines with spaces
-        
         if brute_force:
-            print('Brute Force!')
+            print(f'Brute Force! {f.name}')
             f.seek(0)
             brute_search_matches, brute_search_unmatched, brute_results =   \
                     findPDFMatchesBruteForce(f, text_patterns, env_matches)
@@ -252,6 +250,18 @@ def deleteTextFromPDF(pattern_file, input_file, output_file, formats,
             final_unmatched_envs = set()
             [final_unmatched_envs.update(set(rng)) for rng in brute_search_unmatched]
             all_unmatched_env_indices.intersection(final_unmatched_envs) 
+            if show_indices:
+                print('Matched ranges:')
+                print(brute_search_matches)
+                print('Unmatched ranges:')
+                print(brute_search_unmatched)
+
+        elif show_indices:
+            print('Matched ranges:')
+            print(env_matches)
+            print('Unmatched ranges:')
+            print(search_env_matches)
+
         # write the final edited pdf
         with output_file as g:
             f.seek(0)
@@ -268,12 +278,7 @@ def deleteTextFromPDF(pattern_file, input_file, output_file, formats,
                 else:
                     g.write(line)
 
-        if show_indices:
-            print('Matched ranges:')
-            if brute_force:
-                print(brute_search_matches)
-            else:
-                print(search_env_matches)
+
         if verbose:
             print(f'Generic results: {f.name}')
             printSearchDict(search_results)
@@ -361,13 +366,13 @@ def cli_generic(args):
 
 def cli():
     '''
-    Setup the command line interface. run 'remover.py -h' for help.
+    Setup the command line interface. run 'whiteout -h' for help.
     '''
     parser = argparse.ArgumentParser(   
             prog='whiteout',
             description='''A script to remove patterns in text environments''',    
             epilog='''E.g., in LaTeX, to delete all 'center' environments with 
-                the string \LaTeX, call `$remover.py generic patterns.txt 
+                the string \LaTeX, call `$whiteout generic patterns.txt 
                 input.tex output.tex -b '\\begin{center}' -e '\\end{center}'` 
                 where patterns.txt contains the line `\LaTeX`.''')
   
@@ -391,7 +396,7 @@ def cli():
 
     # Main arguments
     parser.add_argument(
-            'patterns', type=argparse.FileType('r'), 
+            'patterns', type=argparse.FileType('rb'), 
             help='enter the name of path of a text file with lines to remove')
     parser.add_argument(
             'input',   
@@ -401,12 +406,12 @@ def cli():
             help='enter the name or path to write to')
     parser.add_argument(
             '-f', dest='format', 
-            default=set('c'), type=(lambda x: set(['c'] + [e for e in x])),
+            default=set('c'), type=(lambda x: list(set(['c'] + [e for e in x]))),
             help='Delete integer encodings of the search pattern. Options \'cxXdob\'.' 
                 ' See Python\'s \'Format Specification Mini-Language\'.')
     parser.add_argument(
             '-F', dest='format',
-            action='store_const', const=set(INT_ENCODINGS),
+            action='store_const', const=list(INT_ENCODINGS.keys()),
             help='Overrides --format and tries all available formats')
     parser.add_argument(
             '-s', dest='show_indices', action='store_true',  
@@ -423,12 +428,12 @@ def cli():
         return bytes(string, 'utf-8')
     parser.add_argument(
             '-b', dest='beg_env',
-            type=mybytes, default=b'^\d+ 0 obj',
+            type=mybytes, default=rb'^\d+ \d+ obj',
             help='string or python regexp to match the beginning of a text'
                 ' block containing the main pattern')
     parser.add_argument(
             '-e', dest='end_env',
-            type=mybytes, default=b'^endobj',
+            type=mybytes, default=rb'^endobj',
             help='string or python regexp to match the beginning of a text'
                 ' block containing the main pattern')
     

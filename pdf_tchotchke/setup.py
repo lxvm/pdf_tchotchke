@@ -34,6 +34,7 @@ setup(
             'interleave=pdf_tchotchke.bookmarks.interleave:cli',
             'redact=pdf_tchotchke.redaction.redact:cli',
             'whiteout=pdf_tchotchke.redaction.whiteout:cli',
+            'whiteout_re=pdf_tchotchke.redaction.whiteout_re:cli',
             'prepare=pdf_tchotchke.redaction.prepare:cli',
             ]
         }

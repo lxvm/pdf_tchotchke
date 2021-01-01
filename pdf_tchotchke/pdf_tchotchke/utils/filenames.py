@@ -85,7 +85,7 @@ def getSafePath(chosenname, overwrite=False):
         safepath += ext
         print(f"UserWarning: {chosenname} is already taken: Saving to {safepath} instead")
     else:
-        safepath = chosename
+        safepath = chosenname
     # Check for write permissions in write dir for backups
     if not os.access(os.path.dirname(safepath),os.W_OK):
         raise PermissionError(f"{os.path.dirname(safepath)} is not a writable directory")
@@ -190,7 +190,8 @@ def fileIO(readfile="", writefile=None, readext="", writeext="", overwrite=False
 
     # support autocompletion of output file name given input name
     if writefile == None:
-        writefile = readfile
+        # don't overwrite readfile for any reason
+        writefile = fileOut(readfile, writeext)
     return (fileIn(readfile, readext), fileOut(writefile, writeext, overwrite))
 
 

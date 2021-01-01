@@ -2,7 +2,7 @@
 
 # bkmk.py
 # Author: Lorenzo Van Muñoz
-# Last updated Dec 26, 2020
+# Last updated Dec 31, 2020
 
 '''
 A script to generate pdf bookmarks in cpdf,gs,pdftk syntaxes

@@ -32,7 +32,8 @@ This package has only been tested on Debian.
 The main contents of this package are the following command-line scripts:
 - `bkmk`: a script that formats bookmarks for pdfs
 - `interleave`: a helper script for `bkmk`
-- `whiteout`: a script that whites-out specific text objects in a pdf
+- `whiteout`: a script that whites-out specific text objects
+- `whiteout_re`: a refactoring of `whiteout`, but specific to pdfs
 - `redact`: a script that deletes objects from pdfs
 - `prepare`: a script to automate redaction
 

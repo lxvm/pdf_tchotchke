@@ -113,7 +113,7 @@ PDF_PATTERNS = {
     'x_ref'     :   re.compile(rb'(\d\d\d\d\d\d\d\d\d\d) (\d\d\d\d\d) ([nf])\n'),
     'x_info'    :   re.compile(rb'^(\d+) (\d+) '),
     'x_block'   :   re.compile(rb'^(\d+ \d+ *)\n(\d\d\d\d\d\d\d\d\d\d \d\d\d\d\d [nf]\n)+'),
-    'dict'      :   re.compiles(rb'(<<)(.+?)(>>)', re.DOTALL),
+    'dict'      :   re.compile(rb'(<<)(.+?)(>>)', re.DOTALL),
     'obj'       :   re.compile(rb'\n(\d+ \d+ obj *)\n(.+?)\n(endobj)\n', re.DOTALL)
     }
 
@@ -205,7 +205,6 @@ class x_ref_table(pdf_container):
     - blocks of continguous xref blocks
     - xref trailer
     '''
-    p_x_blocks = re.compile()
     def __init__(self, text):
         super().__init__(text)
         self.blocks = [x_block(e) for e in PDF_PATTERNS['x_block'].search(text)]
@@ -301,7 +300,7 @@ def cli():
     parser_object = subparsers.add_parser(  
             'objects',   
             help = 'delete indirect objects from pdf by their reference number'   
-                    'This is useful for debugging.')
+                    '. This is useful for debugging.')
     parser_object.set_defaults( 
             func=cli_object_handler)
     parser_object.add_argument( 
@@ -318,7 +317,6 @@ def cli():
     # search args
     parser_search.add_argument( 
             'patterns', 
-            type=argparse.FileType('rb'), 
             help = 'path to a text file with lines to search and remove')
     parser_search.add_argument( 
             '-f', '--formats',  
@@ -333,7 +331,7 @@ def cli():
     parser_search.add_argument( 
             '-t', '--types',    
             choices=list(PDF_OBJ_TYPES.keys()), default=['stream'],    
-            action='extend', nargs='+', 
+            action='append', nargs='+', 
             help = 'if the search patterns appears as text on the pdf canvas, '
                     'try deleting the specified types of objects and testing '  
                     'if they delete the desired text using an external module.'
@@ -359,7 +357,7 @@ def cli():
             help = 'Verbosity, up to 4 levels by repeating v: '
                     'ERROR=1, WARN=2, INFO=3, DEBUG=4')
     parser.add_argument(    
-            'input', type=argparse.FileType('rb'),   
+            'input', 
             help = 'enter the name or path of a pdf')
     parser.add_argument(    
             '-o', dest='output', 
