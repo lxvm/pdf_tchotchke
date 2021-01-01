@@ -68,7 +68,7 @@ def get_tmp_file_names(file_pattern):
     pdfs_unc = [os.path.join(prefix, 'tmp_uncompressed', os.path.basename(e)) for e in pdfs_in]
     pdfs_red = [os.path.join(prefix, 'tmp_redacted', os.path.basename(e)) for e in pdfs_in]
     pdfs_cmp = [os.path.join(prefix, 'tmp_recompressed', os.path.basename(e)) for e in pdfs_in]
-
+    
     return pdfs_in, pdfs_unc, pdfs_red, pdfs_cmp
 
 
