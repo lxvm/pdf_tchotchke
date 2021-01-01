@@ -93,13 +93,16 @@ def findEnvAndMatchRanges(og_file, text_patterns, formats, beg_env, end_env):
     return matched_envs, unmatched_envs, match_results
 
 
-def findPDFMatchesBruteForce(f, text_patterns, env_matches, og_file=None):
+def findPDFMatchesBruteForce(f, text_patterns, env_matches, og_file=None,
+        raw=False):
     '''
     This processes the environments which weren't already matched by deleting them from the file, running pdftotext to see the difference with the original, 
     Arguments:
     f: file object in read bytes mode: the pdf to whiteout
     text_patterns: a list of byte strings to whiteout
     env_matches: a list of ranges to test in f
+    og_file: f.readlines()
+    raw: whether to use pdftotext raw
     '''
     def searchDiff(og_text, new_text, patterns, brute_results):
         '''
@@ -125,12 +128,15 @@ def findPDFMatchesBruteForce(f, text_patterns, env_matches, og_file=None):
     # initialize data collector
     brute_results = { 'c' : { e : 0  for e in text_patterns } }
     # compile re's as strings (output of pdftotext)
-    patterns = [re.compile(''.join(e.decode('utf-8').split())) for e in text_patterns]
+    if raw:
+        patterns = [re.compile(''.join(e.decode('utf-8').split())) for e in text_patterns]
+    else:
+        patterns = [re.compile(e.decode('utf-8')) for e in text_patterns]
     
     # Using pdftotext python library to read text
     # all manipulations are done in memory so hopefull this is quick
     # produce original text
-    og_text = pdftotext.PDF(f, raw=True)
+    og_text = pdftotext.PDF(f, raw=raw)
     
     # remove text in each range once, one by one, checking for diffs in each page
     if not og_file:
@@ -149,7 +155,7 @@ def findPDFMatchesBruteForce(f, text_patterns, env_matches, og_file=None):
                             for i, e in enumerate(og_file)])
             g.seek(0)
             try:
-                tmp_text = pdftotext.PDF(g, raw=True)
+                tmp_text = pdftotext.PDF(g, raw=raw)
             except pdftotext.Error as e:
                 print(f'Warning: pdftotext.Error: {e}')
                 brute_search_unmatched.append(rng)
@@ -220,7 +226,7 @@ def printSearchDict(results):
 
 # Begin core functions
 def deleteTextFromPDF(pattern_file, input_file, output_file, formats,
-        beg_env=rb'^\d+ 0 obj', end_env=rb'^endobj', brute_force=False,
+        beg_env=rb'^\d+ 0 obj', end_env=rb'^endobj', raw=False, brute_force=False,
         keep_nested=False, verbose=False, show_indices=False):
     '''
     This will whiteout / replace with spaces the search text.
@@ -262,7 +268,7 @@ def deleteTextFromPDF(pattern_file, input_file, output_file, formats,
             f.seek(0)
             brute_search_matches, brute_search_unmatched, brute_results =   \
                     findPDFMatchesBruteForce(f, text_patterns, 
-                                                env_matches, og_file)
+                                                env_matches, og_file, raw)
             # add the indices of the new matches
             [all_matched_indices.update(set(rng)) for rng in brute_search_matches]
             # remove the indices of new ranges that were matched
@@ -366,7 +372,7 @@ def cli_pdf(args):
     This function passes the cli args to deleteTextFromPDF
     '''
     deleteTextFromPDF(args.patterns, args.input, args.output, args.format,
-            args.beg_env, args.end_env, args.brute_force, 
+            args.beg_env, args.end_env, args.raw, args.brute_force, 
             args.keep_nested, args.verbose, args.show_indices)
     return
 
@@ -405,6 +411,9 @@ def cli():
             'pdf', 
             help='delete text patterns from a pdf, by default ascii')
     parser_pdf.set_defaults(func=cli_pdf)
+    parser_pdf.add_argument(
+            '-R', dest='raw', action='store_true',
+            help='call pdftotext with the raw flag (good if no big images)')
     parser_pdf.add_argument(
             '-B', dest='brute_force', action='store_true',    
             help='For non-ASCII text blocks in a pdf, uses pdftotext to read'

@@ -148,11 +148,15 @@ def handle_whiteout(args):
     returns nothing, but prints verbose output
     '''
     patterns, file_unc, file_red = args
+    if re.search(r'[Cc]over', file_unc):
+        raw = True
+    else:
+        raw = False
     with open(patterns, 'rb') as p:
         with open(file_unc, 'rb') as i:
             with open(file_red, 'wb') as o:
                 whiteout.deleteTextFromPDF(p, i, o, ['c', 'x', 'X'], 
-                        verbose=True, brute_force=True)
+                        verbose=True, brute_force=True, raw=raw)
     return
 
 def handle_whiteout_re(args):
@@ -163,11 +167,15 @@ def handle_whiteout_re(args):
     returns nothing, but prints verbose output
     '''
     patterns, file_unc, file_red = args
+    if re.search(r'[Cc]over', file_unc):
+        raw = True
+    else:
+        raw = False
     with open(patterns, 'rb') as p:
         with open(file_unc, 'rb') as i:
             with open(file_red, 'wb') as o:
                 whiteout_re.whiteout_pdf_text(p, i, o, ['c', 'x', 'X'], 
-                        verbose=True, brute_force=True)
+                        verbose=True, brute_force=True, raw=raw)
     return
 
 
