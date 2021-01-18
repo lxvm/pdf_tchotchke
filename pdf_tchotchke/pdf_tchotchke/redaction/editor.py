@@ -133,16 +133,6 @@ P = {# This is a collection of relevant patterns for parsing pdfs
 
 ### Base Classes
 
-class pdf_objs:
-    '''
-    A collection of pdf_obj's
-    initialized from an iterator and an origin
-    '''
-    def __init__(self, iterator, origin):
-        self.els = iterator
-        self.origin = origin
-
-
 class pdf_obj:
     '''
     A base class for things with text in pdfs.
@@ -202,14 +192,14 @@ class pdf_obj:
             self.text = b''.join([self.text[:span[0]], self.text[span(1):]])
 
 
-class pdf_matches(pdf_objs):
+class pdf_objs:
     '''
-    A collection of pdf_match objects
-    initialized from an iterator of match objects (i.e. re.finditer)
-    an origin, and an the type of object to initiate (by default, pdf_match)
+    A collection of pdf_obj's
+    initialized from an iterator and an origin
     '''
-    def __init__(self, iterator, origin, pdf_init=pdf_match):
-        super().__init__((pdf_init(x, origin) for x in iterator), origin)
+    def __init__(self, iterator, origin):
+        self.els = iterator
+        self.origin = origin
 
 
 class pdf_match(pdf_obj):
@@ -328,6 +318,16 @@ class pdf_match(pdf_obj):
                     ids.append(o.span())
 
         return pdf_objs(els, origin=self)
+
+
+class pdf_matches(pdf_objs):
+    '''
+    A collection of pdf_match objects
+    initialized from an iterator of match objects (i.e. re.finditer)
+    an origin, and an the type of object to initiate (by default, pdf_match)
+    '''
+    def __init__(self, iterator, origin, pdf_init=pdf_match):
+        super().__init__((pdf_init(x, origin) for x in iterator), origin)
 
 
 
