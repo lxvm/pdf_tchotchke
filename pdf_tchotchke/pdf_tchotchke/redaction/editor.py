@@ -2,7 +2,7 @@
 
 # editor.py
 # Author: Lorenzo Van Muñoz
-# Last Updated Jan 3, 2020
+# Last Updated Jan 18, 2020
 
 '''
 This module creates classes for a convenient representation of 
