@@ -480,9 +480,10 @@ class pdf_xrefs(pdf_matches):
             assert len(xrefs)==1
         except AssertionError:
             raise AssertionError('bad pdf? more than one startxref in document')
-        xref = xrefs[0] # this is a match object
-        self.where = xref.group(2)
-        super().__init__(pdf_match(xref, origin).finditer(P['xref']), origin, pdf_xref)
+        self.match= xrefs[0] # this is a match object
+        self.where = self.match.group(2)
+        super().__init__(pdf_match(self.match, origin).finditer(P['xref']), origin, pdf_xref)
+        
 
     def xrefs(self):
         return self.els
@@ -496,7 +497,6 @@ class pdf_xref(pdf_match):
     Initialized from a re.match object
     '''
     def trailer(self):
-        trlr = pdf_match(re.match(b'.+', self.match.group(2), re.S), origin=self)
         return pdf_dict(next(self.find('dicts')), origin=self)
 
     def blocks(self):
@@ -636,17 +636,16 @@ class pdf_redactor(pdf_obj):
         If repair is true, then injects the new xref in the pdf in place.
         '''
         header, iobjs, xrefs, eof = self.get_parts()
-        l = len(header)
         h_offset = P['pdf_h'].search(header).start()
         n_entries = 1 # 1 from the header
-        xtext = b''.join([b'0'*(10-len(h_offset)),
+        xtext = b''.join([b'0'*(10-h_offset),
             bytes(str(h_offset), 'utf-8'), b' 65535 f \n'])
         if repair:
             preamble = header
         # create the xitem for each indirect object
         for iobj in iobjs.iobjs():
             n_entries += 1
-            offset = bytes(str(iobj.start()+l), 'utf-8')
+            offset = bytes(str(iobj.start()), 'utf-8')
             # here is a quick and dirty solution
             xtext += b''.join([b'0'*(10-len(offset)), offset, b' 00000 n \n'])
             # probably the more correct thing is to import the xrefs at the
@@ -656,9 +655,9 @@ class pdf_redactor(pdf_obj):
                 preamble += iobj.text
         # also update the length of the trailer and the new startxref position
         n_entries = bytes(str(n_entries), 'utf-8')
-        new_xref = b''.join([b'xref\n0 ', n_entries, b'\n', xtext, 
+        new_xref = b''.join([b'xref\n0 ', n_entries, b'\n', xtext, b'trailer\n',
             re.sub(rb'/Size \d+', rb'/Size '+n_entries, 
-                next(xrefs.xrefs()).trailer()), b'startxref\n', 
+                xrefs.trailer().text), b'\nstartxref\n', 
                 bytes(str(xrefs.match.start()), 'utf-8'), b'\n'])
         if repair:
             self.text = b''.join([preamble, new_xref, eof])
