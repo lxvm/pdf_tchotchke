@@ -4,9 +4,10 @@ Redaction is removing text in a document.
 
 ## Summary
 
-- `whiteout.py`: a tool that removes or replaces text in any document type. 
-It also has some tools for pdfs, some requiring 
-- `redact.py`: a tool to search for and remove particular pdf objects.
+- `whiteout.py`: a tool that replaces text in any document type with spaces (for pdfs, for sure, otherwise maybe). 
+- `whiteout_re.py`: a tool that replaces text in pdfs with spaces (for sure)
+- `redact.py`: a tool to search for and remove particular pdf objects. (Unfinished)
+- `editor.py`: classes to parse pdfs into their parts. (in progress)
 - `prepare.py` : a shell script to automate redaction
 
 To use these scripts, install the dependencies of [`pdftotext`](https://github.com/jalan/pdftotext).

@@ -136,8 +136,7 @@ P = {# This is a collection of relevant patterns for parsing pdfs
 class pdf_objs:
     '''
     A collection of pdf_obj's
-    initialized from an iterator of match objects (i.e. re.finditer)
-    an origin, and an the type of object to initiate (by default, pdf_match)
+    initialized from an iterator and an origin
     '''
     def __init__(self, iterator, origin):
         self.els = iterator
@@ -290,8 +289,8 @@ class pdf_match(pdf_obj):
                 else: # is nested (to include all matches, always do the line above)
                     sbuffer.pop()
         # a lambda function to get a match object based on start and stop
-        match_me = (lambda x: list(self.finditer(re.compile(
-                                re.escape(self.match.string[x[0]:x[1]]))))[0])
+        match_me = (lambda x: next(self.finditer(re.compile(
+                                re.escape(self.match.string[x[0]:x[1]])))))
         
         return (match_me(x) for x in sorted(d_spans)) # generator expression!
 
@@ -377,8 +376,8 @@ class pdf_array(pdf_match):
     A class for arrays in pdfs
     '''
     def parse():
-        con = re.compile(re.escape(list(self.finditer(P['array'])[0].group(1))))
-        return pdf_match(list(self.finditer(con))[0], self).parse()
+        con = re.compile(re.escape(next(self.finditer(P['array']).group(1))))
+        return pdf_match(next(self.finditer(con)), self).parse()
 
 
 class pdf_dict(pdf_match):
@@ -390,8 +389,8 @@ class pdf_dict(pdf_match):
         Break up a dictionary into key value pairs and evaluate the values into
         the appropriate classes
         '''
-        con = re.compile(re.escape(list(self.finditer(P['dict']))[0].group(1)))
-        items = pdf_match(list(self.finditer(con))[0], self).parse().els # pdf_objs
+        con = re.compile(re.escape(next(self.finditer(P['dict'])).group(1)))
+        items = pdf_match(next(self.finditer(con)), self).parse().els # pdf_objs
         # sort the items by span
         assert len(items) > 0 and len(items) % 2 == 0
         items = [e for _,e in sorted(zip([i.start() for i in items], items))]
@@ -461,7 +460,7 @@ class pdf_iobj(pdf_match):
         Takes in the contents of a pdf_obj object excluding the obj/endobj keywords
         '''
         con = re.compile(re.escape(self.contents()))
-        return pdf_match(list(self.finditer(con))[0], self).parse()
+        return pdf_match(next(self.finditer(con)), self).parse()
 
 
     

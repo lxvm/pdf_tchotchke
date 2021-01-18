@@ -179,10 +179,6 @@ def cli():
             help = 'tries all pdf object types, overriding --types')
    
     # Main arguments
-    #parser.add_argument(    
-    #        '-r', '--recursive-depth', 
-    #        help = 'TODO - specifies whether the removed object   
-    #                should delete its parents or children as well')
     parser.add_argument(   
             'options',   
             choices=['delete','info'],
