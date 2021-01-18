@@ -375,8 +375,8 @@ class pdf_array(pdf_match):
     '''
     A class for arrays in pdfs
     '''
-    def parse():
-        con = re.compile(re.escape(next(self.finditer(P['array']).group(1))))
+    def parse(): #lol can't find an easier way to remove delimiters than to slice
+        con = re.compile(re.escape(next(self.find('arrays')).group(0))[2:-2])
         return pdf_match(next(self.finditer(con)), self).parse()
 
 
@@ -389,7 +389,7 @@ class pdf_dict(pdf_match):
         Break up a dictionary into key value pairs and evaluate the values into
         the appropriate classes
         '''
-        con = re.compile(re.escape(next(self.finditer(P['dict'])).group(1)))
+        con = re.compile(re.escape(next(self.find('dicts')).group(0))[2:-2])
         items = pdf_match(next(self.finditer(con)), self).parse().els # pdf_objs
         # sort the items by span
         assert len(items) > 0 and len(items) % 2 == 0
@@ -400,6 +400,17 @@ class pdf_dict(pdf_match):
             assert type(a)==pdf_name and issubclass(type(b), pdf_obj)
         # return a dictionary 
         return {e[0] : e[1] for e in items}
+
+    def names(self, search=[]):
+        '''
+        Provide a list of names to search through and return the corresponding entries
+        '''
+        dct = self.parse()
+        #print([e.text for e in dct.keys()])
+        insearch = lambda x: any([word in x for word in search])
+        return [dct[e] for e in dct if insearch(e.text)]
+
+
 
 
 ### Indirect Object Classes
@@ -462,7 +473,17 @@ class pdf_iobj(pdf_match):
         con = re.compile(re.escape(self.contents()))
         return pdf_match(next(self.finditer(con)), self).parse()
 
-
+    def dict(self):
+        '''
+        finds a returns the dictionaries in an object
+        '''
+        dicts = [e for e in self.parse().els if type(e)==pdf_dict]
+        if len(dicts) == 1:
+            return dicts[0]
+        elif len(dicts) >= 1:
+            return dicts
+        else:
+            return None
     
 
 ### Xref Classes
@@ -583,6 +604,15 @@ class pdf_redactor(pdf_obj):
                 for i, item in enumerate(block.items()):
                     x_offsets.append(tuple([block.start() + i, item.offset()]))
         return x_offsets == o_offsets
+
+    def get_root(self):
+        '''
+        gets the root object
+        '''
+        d = self.get_xrefs().trailer().parse()
+        ref = [d[e] for e in d if b'Root' in e.text][0]
+
+        return next(self.get_iobjs().iobjs([ref.dest()]))
 
     def del_objs(self, objs):
         '''
