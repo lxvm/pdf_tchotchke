@@ -2,7 +2,7 @@
 
 # whiteout.py
 # Author: Lorenzo Van Muñoz
-# Last Updated Dec 30 2020
+# Last Updated Jan 1, 2021
 '''
 A script to remove patterns in a file.
 Designed with PDFs in mind. 
@@ -166,6 +166,10 @@ def findPDFMatchesBruteForce(f, text_patterns, env_matches, og_file=None,
                     if searchDiff(page, tmp_text[i],
                                     patterns, brute_results):
                         brute_search_matches.append(rng)
+                        # Exception case for bad pdfs
+                        if b' ' in new_patterns:
+                            brute_search_unmatched.append(env)
+                            continue 
                         is_match = True
                         new_patterns = []
                         for line in og_file[rng.start : rng.stop]:
