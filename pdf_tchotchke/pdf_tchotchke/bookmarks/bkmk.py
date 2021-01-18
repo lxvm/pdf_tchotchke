@@ -59,7 +59,7 @@ BKMK_SYNTAX = {
         "cpdf"   : {
             "print" : (lambda x,y,z: f"{z} \"{x}\" {y}\n"),
             "sense" : r"(?P<index>\d+) \"(?P<title>.+)\" (?P<page>\d+).*"
-            # View information is given by "[<page number></view command>]"
+        # View information is given by "[<page number></view command>]"
             },
         "gs"    : {
             # the minus sign before the count leaves the menu unexpanded
@@ -449,8 +449,6 @@ def cli():
     Run the bkmk.py script.
     This handles its command-line arguments and executes the requested functions.
     '''
-
-
     # Define command-line arguments
     parser = argparse.ArgumentParser(
             prog='bkmk',   
@@ -489,7 +487,7 @@ def cli():
             help="read in a pdf to get a rough TOC that will need inspection")
     parser_import.set_defaults(func=importPDFTOC)
     parser_import.add_argument(
-            "-pdf", "--pdftotext", action="store_true",
+            "-pdf", dest="pdftotext", action="store_true",
             help="instead of reading in a raw TOC, read it from pdf with pdftotext")
     parser_import.add_argument(
             "-y", "--yolo", action="store_true",
@@ -511,7 +509,7 @@ def cli():
             "syntax", choices=list(BKMK_SYNTAX),    
             help="choose bookmark output format")
     parser.add_argument(
-            "input", type=argparse.FileType('r'),
+            "input",
             help="input file name")
     parser.add_argument(
             "-o", dest="output",
@@ -519,15 +517,20 @@ def cli():
 
     args = parser.parse_args()  
     
-    args = filenames.getSafeArgsOutput(args, ext='.txt',
-                                    overwrite=False, mode='w')
+    args.input, args.output = filenames.fileIO(args.input, args.output,
+            writeext='.txt')
 
     print("bkmk.py - a script to manipulate pdf bookmarks\n")
-    
-    args.func(args)
+   
+    if args.func == importPDFTOC:
+        if args.pdftotext:
+            readmode = 'rb'
+    else:
+        readmode = 'r'
 
-    args.input.close()
-    args.output.close()
+    with open(args.input, readmode) as args.input:
+        with open(args.output, 'w') as args.output:
+            args.func(args)
     
     # Close script
     print("\nBookmarks finished!")
