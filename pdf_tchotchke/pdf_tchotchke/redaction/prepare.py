@@ -2,7 +2,7 @@
 
 # prepare.py
 # Author: Lorenzo Van Muñoz
-# Last Updated Dec 29, 2020
+# Last Updated Jan 1, 2021
 
 '''
 This python script is a replacement for preparePDF.sh.
@@ -52,10 +52,10 @@ def get_tmp_file_names(file_pattern):
     # make tmp dirs
     prefix = os.path.abspath(os.path.dirname(file_pattern))
     name   = os.path.basename(file_pattern)
+    tmp_folders = ['tmp_uncompressed', 'tmp_redacted', 'tmp_recompressed']
     try: 
-        os.mkdir(os.path.join(prefix, 'tmp_uncompressed'))
-        os.mkdir(os.path.join(prefix, 'tmp_redacted'))
-        os.mkdir(os.path.join(prefix, 'tmp_recompressed'))
+        for folder in [os.path.join(prefix, e) for e in tmp_folders]:
+            os.mkdir(folder)
     except FileExistsError:
         pass
     p = re.compile(rf'{name}')
@@ -95,7 +95,7 @@ def clean_tmp_files(pdfs_unc, pdfs_red, pdfs_cmp):
     return
 
 
-def press_pdfs(pdfs_in, pdfs_out, method, prog):
+def press_pdfs(pdfs_in, pdfs_out, method, prog, parallel=False):
     '''
     (De)compress all of the input pdfs
     arguments
@@ -106,9 +106,16 @@ def press_pdfs(pdfs_in, pdfs_out, method, prog):
                         ' \'compress\' or \'decompress\'')
     commands = [PDF_PROGRAMS[prog][method](e, pdfs_out[i]).split() 
                 for i, e in enumerate(pdfs_in)]
-    with Pool() as pool:
+    if parallel:
+        with Pool() as pool:
+            try:
+                pool.map(subprocess.run, commands)
+            except FileNotFoundError as f:
+                raise FileNotFoundError(f'{f}: Check that {prog} is installed')
+    else:
         try:
-            pool.map(subprocess.run, commands)
+            for command in commands:
+                subprocess.run(command)
         except FileNotFoundError as f:
             raise FileNotFoundError(f'{f}: Check that {prog} is installed')
 
@@ -147,16 +154,12 @@ def handle_whiteout(args):
     accepts the paths to the patterns file, uncompressed pdf, and redacted file
     returns nothing, but prints verbose output
     '''
-    patterns, file_unc, file_red = args
-    if re.search(r'[Cc]over', file_unc):
-        raw = True
-    else:
-        raw = False
+    patterns, file_unc, file_red, brute_force, verbose, raw = args
     with open(patterns, 'rb') as p:
         with open(file_unc, 'rb') as i:
             with open(file_red, 'wb') as o:
                 whiteout.deleteTextFromPDF(p, i, o, ['c', 'x', 'X'], 
-                        verbose=True, brute_force=True, raw=raw)
+                        verbose=verbose, brute_force=brute_force, raw=raw)
     return
 
 def handle_whiteout_re(args):
@@ -166,20 +169,17 @@ def handle_whiteout_re(args):
     as a list
     returns nothing, but prints verbose output
     '''
-    patterns, file_unc, file_red = args
-    if re.search(r'[Cc]over', file_unc):
-        raw = True
-    else:
-        raw = False
+    patterns, file_unc, file_red, brute_force, verbose, raw = args
     with open(patterns, 'rb') as p:
         with open(file_unc, 'rb') as i:
             with open(file_red, 'wb') as o:
                 whiteout_re.whiteout_pdf_text(p, i, o, ['c', 'x', 'X'], 
-                        verbose=True, brute_force=True, raw=raw)
+                        verbose=verbose, brute_force=brute_force, raw=raw)
     return
 
 
-def handle_action(action, patterns, pdfs_unc, pdfs_red, parallel=False):
+def handle_action(action, patterns, pdfs_unc, pdfs_red, parallel=False,
+        brute_force=False, verbose=False, raw=False):
     '''
     This function handles the redaction
     Arguments:
@@ -192,30 +192,33 @@ def handle_action(action, patterns, pdfs_unc, pdfs_red, parallel=False):
         with Pool() as pool:
             try:
                 pool.map(ACTIONS[action], 
-                        [(patterns, e, pdfs_red[i]) for i,e in enumerate(pdfs_unc)])
+                        [(patterns, e, pdfs_red[i], brute_force, verbose, raw) 
+                            for i,e in enumerate(pdfs_unc)])
             except BaseException as e:
                 print(f'Warning: {e}')
     else:
         for i,e in enumerate(pdfs_unc):
-            ACTIONS[action]([patterns, e, pdfs_red[i]])
+            ACTIONS[action]([patterns, e, pdfs_red[i], brute_force, verbose,
+                raw])
     return
 
 
-def autoredact(action, prog, patterns, file_pattern, output, parallel=False):
+def autoredact(action, prog, patterns, file_pattern, output, parallel=False,
+        brute_force= False,verbose=False, raw=False, debug=False):
     '''
     This function orchestrates the redaction.
     '''
     # obtain pdfs to redact
     pdfs_in, pdfs_unc, pdfs_red, pdfs_cmp = \
         get_tmp_file_names(file_pattern)
-    press_pdfs(pdfs_in, pdfs_unc, 'decompress', prog)
+    press_pdfs(pdfs_in, pdfs_unc, 'decompress', prog, parallel)
     # do the redaction here by calling redact with multiprocessing.Pool()
-    handle_action(action, patterns, pdfs_unc, pdfs_red, parallel)
+    handle_action(action, patterns, pdfs_unc, pdfs_red, parallel, brute_force, verbose, raw)
     # wrap up pdfs
-    press_pdfs(pdfs_red, pdfs_cmp, 'compress', prog)
+    press_pdfs(pdfs_red, pdfs_cmp, 'compress', prog, parallel)
     merge_pdfs(pdfs_cmp, output, prog)
-
-    clean_tmp_files(pdfs_unc, pdfs_red, pdfs_cmp)
+    if not debug:
+        clean_tmp_files(pdfs_unc, pdfs_red, pdfs_cmp)
     
     return
 
@@ -248,12 +251,27 @@ def cli():
     parser.add_argument(
             '-P', dest='parallel', action='store_true',
             help='Run the redaction in parallel as opposed to serially.'
-                ' This will use all cores on your computer and so be careful.')
+                ' This will use all cores on your computer and so be careful.'
+                ' This may be more error-prone too.')
+    parser.add_argument(
+            '-B', dest='brute_force', action='store_true',
+            help='Run the redaction using pdftotext to match all readable text.'
+                ' This will take longer, but most likely removes more.')
+    parser.add_argument(
+            '-v', dest='verbose', action='store_true',
+            help='print some statistics about pattern matches')
+    parser.add_argument(
+            '-R', dest='raw', action='store_true',
+            help='give the raw flag to pdftotext. May be faster.')
+    parser.add_argument(
+            '-D', dest='debug', action='store_true',
+            help='Don\'t delete the temporary files')
             
     args = parser.parse_args()
 
     autoredact(args.action, args.prog, args.patterns, args.file_pattern,
-            args.output, args.parallel)
+            args.output, args.parallel, args.brute_force, args.verbose,
+            args.raw, args.debug)
 
     return
 
