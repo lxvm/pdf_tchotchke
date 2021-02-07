@@ -22,4 +22,5 @@ share/python-wheels/
 *.egg
 MANIFEST
 # python3 -m venv env
-[v]?env/
+env/
+venv/
