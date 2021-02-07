@@ -68,7 +68,6 @@ which can be deleted.
 
 import re 
 from io import BufferedReader, BufferedRandom
-from functools import partial
 
 import pdftotext
 
@@ -112,9 +111,12 @@ P = {# This is a collection of relevant patterns for parsing pdfs
     # for dictionaries and arrays, use the pdf_match.find('dicts'|'arrays')
     # method as it can return an iterator of the highest level matches of
     # potentially nested and sequential groups of these delimiters
+    # If you use these regexps there are bound to be errors one way or another
+    # If you need to remove the delimiters for either dict or array, on a 
+    # string A, then the slice re.escape[2:-2] will remove them
     #'ditems':   re.compile(rb'(/\w+)(/[^/]+|[^/].+[\)\]>]|[^/]+)', re.DOTALL),
-    'dict'  :   re.compile(rb'<<\n*(.+?)\n*>>', re.DOTALL),
-    'array' :   re.compile(b'\[\n*(.+?)\n*\]'),
+    #'dict'  :   re.compile(rb'<<\n*(.+?)\n*>>', re.DOTALL),
+    #'array' :   re.compile(b'\[\n*(.+?)\n*\]'),
     'stream':   re.compile(b''.join([b'stream(.+?)endstream', C['ws'], b'+']),
                             re.DOTALL),
     'ref'   :   re.compile(b''.join([b'(\d+) \d+ R', C['ws'], b'*'])),

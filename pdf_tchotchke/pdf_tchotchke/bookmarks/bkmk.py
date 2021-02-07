@@ -514,7 +514,7 @@ def cli():
     parser.add_argument(
             "-o", dest="output",
             help="output file name")
-
+    
     args = parser.parse_args()  
     
     args.input, args.output = filenames.fileIO(args.input, args.output,
@@ -539,5 +539,5 @@ def cli():
 
 # run script if called from command line
 if __name__ == "__main__":
-    cli()    
+    cli()
     raise SystemExit()
