@@ -4,26 +4,22 @@ Baubles for pdfs
 
 ## Installation
 
+Some of the functions rely on an installation of `pdftotext`, a python package
+based on the poppler library.
+Though the package will be installed along with this one, `pdftotext` has some
+system requirements that you must install with it.
+Instructions [here](https://github.com/jalan/pdftotext).
+
 ```
-$ git pull https://github.com/lord-zo/misc.git
-$ cd misc/
+$ git pull https://github.com/lord-zo/pdf_tchotchke.git
 $ python3 -m pip install --user pdf_tchotchke
-# If the above command doesn't work due to permission errors, add this flag:
-# --prefix ~/.local
-# If you would like to change the source code, add this flag:
-# -e (or --editable)
+# If you would like to change the source code, add the --editable flag:
 ```
 
 `pip` installs the scripts from this package in `$HOME/.local/bin`.
 Alternatively, use a [`venv`](https://docs.python.org/3/library/venv.html).
 Either way, check that the `bin` folder installation directory is on your `PATH`.
 This will make the scripts available to run from the command line.
-
-Some of the functions rely on an installation of `pdftotext`, a python package
-based on the poppler library.
-Though the package will be installed along with this one, `pdftotext` has some
-system requirements that you must install with it.
-Instructions [here](https://github.com/jalan/pdftotext).
 
 This package has only been tested on Debian.
 

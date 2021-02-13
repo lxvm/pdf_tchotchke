@@ -8,6 +8,13 @@ https://github.com/pypa/sampleproject
 
 from setuptools import setup, find_packages
 
+# unfortunate issue due to PEP 517
+# https://github.com/pypa/pip/issues/7953
+
+import site
+
+site.ENABLE_USER_SITE = True
+
 setup(
     name='pdf_tchotchke',
     version='0.0',
@@ -26,7 +33,7 @@ setup(
     ],
     keywords='pdf, bookmarks, redaction',
     packages=find_packages(),
-    requires=['pdftotext'],
+    install_requires=['pdftotext'],
     python_requires='>=3.7.3',
     entry_points={
         'console_scripts': [

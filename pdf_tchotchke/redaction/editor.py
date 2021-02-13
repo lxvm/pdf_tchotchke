@@ -135,6 +135,37 @@ P = {# This is a collection of relevant patterns for parsing pdfs
 
 ### Base Classes
 
+class my_match:
+    '''
+    A mutable representation of Re.Match objects
+    Instantiated from an re.Match object plus an offset
+    to account for where the string is located in the pdf file
+    to do searching more efficiently
+    '''
+    def __init__(self, match, offset=0):
+        self.match = match
+        self.offset = offset
+
+    def span(self):
+        return((self.match.span()[0] + self.offset,
+               self.match.span()[1] + self.offset))
+
+    def start(self):
+        return(self.match.start()+self.offset)
+
+    def end(self):
+        return(self.match.end()+self.offset)
+
+    def group(self, *args, **kwargs):
+	return(self.match.group(args, kwargs))
+
+    def groups(self, *args, **kwargs):
+	return(self.match.groups())
+
+    def groupdict(self):
+	return(self.match.groupdict())
+
+
 class pdf_obj:
     '''
     A base class for things with text in pdfs.
