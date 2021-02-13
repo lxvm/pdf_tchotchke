@@ -1,12 +1,8 @@
-# misc
-
-A script is worth a thousand functions
-
-## PDF Tchotchke
+# PDF Tchotchke
 
 Baubles for pdfs
 
-### Installation
+## Installation
 
 ```
 $ git pull https://github.com/lord-zo/misc.git
@@ -31,7 +27,7 @@ Instructions [here](https://github.com/jalan/pdftotext).
 
 This package has only been tested on Debian.
 
-### Summary
+## Summary
 
 The main contents of this package are the following command-line scripts:
 - `bkmk`: a script that formats bookmarks for pdfs
