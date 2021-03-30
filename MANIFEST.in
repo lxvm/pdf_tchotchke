@@ -1,5 +1,0 @@
-# Default files included in the source distribution:
-# https://packaging.python.org/guides/using-manifest-in/#using-manifest-in
-
-# Include the examples
-recursive-include examples *
