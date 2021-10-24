@@ -121,12 +121,15 @@ Some elements of the output will have to be reviewed by hand such as entries wit
 - `cpdf -list-bookmarks in.pdf > bkmk.txt`
 - `pdftk in.pdf dump_data output bkmk.txt`
 - With `gs` I don't know how to extract pdfmarks. For ideas see [this](https://github.com/trueroad/extractpdfmark)
+- `mutool show in.pdf outline > bkmk.txt`
 
 ### Writing bookmark data to a pdf
 
 - `cpdf -add-bookmarks bkmk.txt in.pdf -o out.pdf`
 - `pdftk in.pdf update_info bkmk.txt output out.pdf`
 - `gs -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=out.pdf in*.pdf bkmk.txt`
+- pretty sure this can be done with `mutool run ...` by invoking `Document#set_toc`.
+See [issue with example in PyMuPDF](https://github.com/pymupdf/PyMuPDF/issues/213).
 
 ## Tips
 
